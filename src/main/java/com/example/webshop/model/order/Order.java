@@ -1,0 +1,30 @@
+package com.example.webshop.model.order;
+
+import com.example.webshop.model.customer.Customer;
+import lombok.*;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "webshop_order", schema = "public")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
+public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @Column(name = "total_price_hrk")
+    private BigDecimal totalPriceHrk;
+    @Column(name = "total_price_eur")
+    private BigDecimal totalPriceEur;
+    @ManyToOne
+    private Customer customer;
+}
