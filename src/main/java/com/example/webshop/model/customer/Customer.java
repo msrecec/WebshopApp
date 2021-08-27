@@ -19,16 +19,13 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "code")
-    private String code;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "price_hrk")
-    private BigDecimal priceHrk;
-    @Column(name = "description")
-    private String description;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "email")
+    private String email;
     @Column(name = "is_available")
-    private Boolean isAvailable;
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
 }
