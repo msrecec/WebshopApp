@@ -14,7 +14,7 @@
 	<name>webshop</name>
 	<description>Webshop app for a job application assignment</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>16</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
