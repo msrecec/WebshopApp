@@ -1,12 +1,6 @@
 package com.example.webshop.model.product;
 
-import com.example.webshop.model.order.Order;
 import com.example.webshop.model.orderItem.OrderItem;
-import lombok.*;
-
-import javax.persistence.*;
-
-import com.example.webshop.model.order.Order;
 import lombok.*;
 
 import javax.persistence.*;
