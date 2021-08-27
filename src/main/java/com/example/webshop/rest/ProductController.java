@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/product")
@@ -17,6 +18,11 @@ public class ProductController {
 
     public ProductController(ProductService productService) {
         this.productService = productService;
+    }
+
+    @GetMapping
+    public List<ProductDTO> getAllProducts() {
+        return productService.findAll();
     }
 
     @GetMapping("/code/{code}")
@@ -42,4 +48,26 @@ public class ProductController {
                                 .build()
                 );
     }
+
+    @PutMapping
+    public ResponseEntity<ProductDTO> update(@Valid @RequestBody final ProductCommand command) {
+        return productService.update(command)
+                .map(productDTO -> ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(productDTO)
+                )
+                .orElseGet(
+                        () -> ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .build()
+                );
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/code/{code}")
+    public void delete(@PathVariable String code) {
+        productService.deleteByCode(code);
+    }
+
+
 }
