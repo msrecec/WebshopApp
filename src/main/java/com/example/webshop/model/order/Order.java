@@ -1,10 +1,12 @@
 package com.example.webshop.model.order;
 
 import com.example.webshop.model.customer.Customer;
+import com.example.webshop.model.orderItem.OrderItem;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "webshop_order", schema = "public")
@@ -27,4 +29,6 @@ public class Order {
     private BigDecimal totalPriceEur;
     @ManyToOne
     private Customer customer;
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems;
 }
