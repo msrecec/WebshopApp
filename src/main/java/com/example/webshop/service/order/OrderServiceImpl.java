@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -41,9 +40,8 @@ public class OrderServiceImpl implements OrderService{
     public Optional<Order> save(OrderCommand command) {
 
         List<OrderItem> orderItems = new ArrayList<>();
-        List<OrderItemCommand> items = command.getOrderItems();
 
-        for(OrderItemCommand orderItemCommand : items) {
+        for(OrderItemCommand orderItemCommand : command.getOrderItems()) {
             Optional<Product> product = productRepositoryJpa.findByCode(orderItemCommand.getCode());
             if(product.isPresent() && product.get().getIsAvailable()) {
                 orderItems.add(orderItemRepositoryJpa.save(OrderItem.builder().quantity(orderItemCommand.getQuantity()).product(product.get()).build()));
