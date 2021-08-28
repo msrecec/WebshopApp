@@ -28,7 +28,6 @@ public class Product {
     private String description;
     @Column(name = "is_available")
     private Boolean isAvailable;
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "product")
     private OrderItem orderItem;
 }

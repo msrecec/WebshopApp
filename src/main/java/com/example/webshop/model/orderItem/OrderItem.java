@@ -21,8 +21,7 @@ public class OrderItem {
     @ManyToOne
     Order order;
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
     @Column(name = "quantity")
     private Integer quantity;
