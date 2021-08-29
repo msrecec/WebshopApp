@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "product", schema = "public")
+@Table(name = "product", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(name = "product_code_unique", columnNames = "code")
+})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -16,10 +18,11 @@ import java.util.List;
 @Setter
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "product_sequence", sequenceName = "product_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
     @Column(name = "id")
     private Long id;
-    @Column(name = "code")
+    @Column(name = "code", nullable = false)
     private String code;
     @Column(name = "name")
     private String name;

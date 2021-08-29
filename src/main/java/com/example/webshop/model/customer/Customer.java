@@ -16,16 +16,16 @@ import java.util.List;
 @Setter
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "customer_sequence", sequenceName = "customer_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_sequence")
     @Column(name = "id")
     private Long id;
-    @Column(name = "first_name")
+    @Column(name = "first_name", columnDefinition = "TEXT")
     private String firstName;
-    @Column(name = "last_name")
+    @Column(name = "last_name", columnDefinition = "TEXT")
     private String lastName;
-    @Column(name = "email")
+    @Column(name = "email" , columnDefinition = "TEXT")
     private String email;
-    @Column(name = "is_available")
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
 }

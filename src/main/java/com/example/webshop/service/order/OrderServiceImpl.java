@@ -122,7 +122,7 @@ public class OrderServiceImpl implements OrderService{
         if(orderOptional.isPresent()) {
             List<OrderItem> orderItems = orderOptional.get().getOrderItems();
             BigDecimal totalPriceHrk = new BigDecimal(0);
-            BigDecimal totalPriceEur = null;
+            BigDecimal totalPriceEur;
 
             for(OrderItem item : orderItems) {
                 Product product = item.getProduct();
