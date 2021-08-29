@@ -1,5 +1,8 @@
 package com.example.webshop.service.order;
 
+import com.example.webshop.dto.order.OrderDTO;
+import com.example.webshop.mapping.mapper.order.OrderMapper;
+import com.example.webshop.mapping.mapper.order.OrderMapperImpl;
 import com.example.webshop.model.customer.Customer;
 import com.example.webshop.model.order.Order;
 import com.example.webshop.model.order.OrderCommand;
@@ -24,20 +27,23 @@ public class OrderServiceImpl implements OrderService{
     private final ProductRepositoryJpa productRepositoryJpa;
     private final CustomerRepositoryJpa customerRepositoryJpa;
     private final OrderRepositoryJpa orderRepositoryJpa;
+    private final OrderMapper orderMapper;
 
     public OrderServiceImpl(OrderItemRepositoryJpa orderItemRepositoryJpa,
                             ProductRepositoryJpa productRepositoryJpa,
                             CustomerRepositoryJpa customerRepositoryJpa,
-                            OrderRepositoryJpa orderRepositoryJpa) {
+                            OrderRepositoryJpa orderRepositoryJpa,
+                            OrderMapperImpl orderMapper) {
         this.orderItemRepositoryJpa = orderItemRepositoryJpa;
         this.productRepositoryJpa = productRepositoryJpa;
         this.customerRepositoryJpa = customerRepositoryJpa;
         this.orderRepositoryJpa = orderRepositoryJpa;
+        this.orderMapper = orderMapper;
     }
 
 
     @Override
-    public Optional<Order> save(OrderCommand command) {
+    public Optional<OrderDTO> save(OrderCommand command) {
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -64,7 +70,7 @@ public class OrderServiceImpl implements OrderService{
                 .orderItems(orderItems)
                 .build();
 
-        return Optional.ofNullable(orderRepositoryJpa.save(order));
+        return Optional.ofNullable(orderRepositoryJpa.save(order)).map(orderMapper::mapOrderToDTO);
 
     }
 }

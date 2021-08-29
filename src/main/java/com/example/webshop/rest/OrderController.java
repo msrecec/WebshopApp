@@ -1,6 +1,7 @@
 package com.example.webshop.rest;
 
 
+import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.dto.product.ProductDTO;
 import com.example.webshop.model.order.Order;
 import com.example.webshop.model.order.OrderCommand;
@@ -28,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> save(@Valid @RequestBody final OrderCommand command) {
+    public ResponseEntity<OrderDTO> save(@Valid @RequestBody final OrderCommand command) {
         return orderService.save(command)
                 .map(
                         productDTO -> ResponseEntity
