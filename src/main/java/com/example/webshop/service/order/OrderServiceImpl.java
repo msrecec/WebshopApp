@@ -44,19 +44,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDTO> findAll() {
-        List<Order> orders = orderRepositoryJpa.findAll();
-        System.out.println("Printing order items");
-        orders.forEach(order -> {
-            order.getOrderItems().forEach(orderItem -> {
-                System.out.println("Product");
-                System.out.println(orderItem.getProduct().getName());
-                System.out.println(orderItem.getProduct().getCode());
-                System.out.println(orderItem.getProduct().getIsAvailable());
-                System.out.println("Order item quantity:");
-                System.out.println(orderItem.getQuantity());
-            });
-        });
-        return orders.stream().map(orderMapper::mapOrderToDTO).collect(Collectors.toList());
+        return orderRepositoryJpa.findAll().stream().map(orderMapper::mapOrderToDTO).collect(Collectors.toList());
     }
 
     @Override
