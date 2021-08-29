@@ -20,8 +20,7 @@ public class OrderItem {
     private Long id;
     @ManyToOne
     Order order;
-    @OneToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @ManyToOne
     private Product product;
     @Column(name = "quantity")
     private Integer quantity;

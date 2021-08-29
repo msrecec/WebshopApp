@@ -21,14 +21,12 @@ public class ProductMapperImpl implements ProductMapper {
 
     @Override
     public Product mapCommandToProduct(ProductCommand command) {
-        return new Product(
-                null,
-                command.getCode(),
-                command.getName(),
-                command.getPriceHrk(),
-                command.getDescription(),
-                command.getIsAvailable(),
-                null
-        );
+        return Product.builder()
+                .code(command.getCode())
+                .name(command.getName())
+                .priceHrk(command.getPriceHrk())
+                .description(command.getDescription())
+                .isAvailable(command.getIsAvailable())
+                .build();
     }
 }
