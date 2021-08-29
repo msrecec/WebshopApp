@@ -110,6 +110,7 @@ public class OrderServiceImpl implements OrderService{
         return order.map(orderMapper::mapOrderToDTO);
     }
 
+    @Transactional
     public Optional<OrderDTO> finalizeOrder(Long id) {
         Optional<Order> orderOptional = orderRepositoryJpa.findById(id);
 
@@ -137,7 +138,7 @@ public class OrderServiceImpl implements OrderService{
             orderOptional.get().setTotalPriceHrk(totalPriceHrk);
             orderOptional.get().setTotalPriceEur(totalPriceEur);
 
-            session.update(orderOptional.get());
+            session.merge(orderOptional.get());
 
             return orderOptional.map(orderMapper::mapOrderToDTO);
 
