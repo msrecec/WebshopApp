@@ -37,6 +37,15 @@ public class OrderController {
                 );
     }
 
+    @PostMapping("/finalize/{id}")
+    public ResponseEntity<OrderDTO> finalizeOrder(@PathVariable final Long id) {
+        return orderService.finalizeOrder(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(
+                        () -> ResponseEntity.notFound().build()
+                );
+    }
+
     @GetMapping("/hnb")
     public ResponseEntity<Hnb> getHnbAPI() {
         return orderService.getHnbApi()

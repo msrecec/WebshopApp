@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService{
         if(orderOptional.isPresent()) {
             List<OrderItem> orderItems = orderOptional.get().getOrderItems();
             BigDecimal totalPriceHrk = new BigDecimal(0);
-            BigDecimal totalPriceEur;
+            BigDecimal totalPriceEur = null;
 
             for(OrderItem item : orderItems) {
                 Product product = item.getProduct();
@@ -124,8 +124,22 @@ public class OrderServiceImpl implements OrderService{
                 if(product.getIsAvailable()) {
                     totalPriceHrk = totalPriceHrk.add(new BigDecimal(item.getQuantity()).multiply(product.getPriceHrk()));
                 }
+
             }
-            return null;
+
+            Optional<Hnb> hnb = getHnbApi();
+
+            if(hnb.isPresent()) {
+                totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+            }
+
+            orderOptional.get().setStatus(Status.SUBMITTED);
+            orderOptional.get().setTotalPriceHrk(totalPriceHrk);
+            orderOptional.get().setTotalPriceEur(totalPriceEur);
+
+            session.update(orderOptional.get());
+
+            return orderOptional.map(orderMapper::mapOrderToDTO);
 
         } else {
             return Optional.empty();

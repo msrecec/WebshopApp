@@ -14,4 +14,5 @@ public interface OrderService {
      Optional<OrderDTO> findById(Long id);
      List<OrderDTO> findAll();
      Optional<Hnb> getHnbApi();
+     Optional<OrderDTO> finalizeOrder(Long id);
 }
