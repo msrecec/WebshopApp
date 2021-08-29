@@ -142,6 +142,8 @@ public class OrderServiceImpl implements OrderService{
 
             if(hnb.isPresent()) {
                 totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+            } else {
+                return Optional.empty();
             }
 
             orderOptional.get().setStatus(Status.SUBMITTED);
