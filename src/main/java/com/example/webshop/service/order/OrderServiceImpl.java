@@ -7,11 +7,15 @@ import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.mapping.mapper.order.OrderMapper;
 import com.example.webshop.mapping.mapper.order.OrderMapperImpl;
 import com.example.webshop.model.customer.Customer;
+import com.example.webshop.model.hnb.Currency;
+import com.example.webshop.model.hnb.Hnb;
 import com.example.webshop.model.order.Order;
 import com.example.webshop.model.order.Status;
 import com.example.webshop.model.orderItem.OrderItem;
 import com.example.webshop.model.product.Product;
 import com.example.webshop.repository.customer.CustomerRepositoryJpa;
+import com.example.webshop.repository.hnbAPI.HnbRepository;
+import com.example.webshop.repository.hnbAPI.HnbRepositoryImpl;
 import com.example.webshop.repository.order.OrderRepositoryJpa;
 import com.example.webshop.repository.orderItem.OrderItemRepositoryJpa;
 import com.example.webshop.repository.product.ProductRepositoryJpa;
@@ -20,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +38,7 @@ public class OrderServiceImpl implements OrderService{
     private final ProductRepositoryJpa productRepositoryJpa;
     private final CustomerRepositoryJpa customerRepositoryJpa;
     private final OrderRepositoryJpa orderRepositoryJpa;
+    private final HnbRepository hnbRepository;
     private final OrderMapper orderMapper;
     private final Session session;
 
@@ -41,12 +47,14 @@ public class OrderServiceImpl implements OrderService{
                             ProductRepositoryJpa productRepositoryJpa,
                             CustomerRepositoryJpa customerRepositoryJpa,
                             OrderRepositoryJpa orderRepositoryJpa,
+                            HnbRepositoryImpl hnbRepository,
                             OrderMapperImpl orderMapper,
                             Session session) {
         this.orderItemRepositoryJpa = orderItemRepositoryJpa;
         this.productRepositoryJpa = productRepositoryJpa;
         this.customerRepositoryJpa = customerRepositoryJpa;
         this.orderRepositoryJpa = orderRepositoryJpa;
+        this.hnbRepository = hnbRepository;
         this.orderMapper = orderMapper;
         this.session = session;
     }
@@ -102,17 +110,68 @@ public class OrderServiceImpl implements OrderService{
         return order.map(orderMapper::mapOrderToDTO);
     }
 
+    public Optional<OrderDTO> finalizeOrder(Long id) {
+        Optional<Order> orderOptional = orderRepositoryJpa.findById(id);
+
+        if(orderOptional.isPresent()) {
+            List<OrderItem> orderItems = orderOptional.get().getOrderItems();
+            BigDecimal totalPriceHrk = new BigDecimal(0);
+            BigDecimal totalPriceEur;
+
+            for(OrderItem item : orderItems) {
+                Product product = item.getProduct();
+
+                if(product.getIsAvailable()) {
+                    totalPriceHrk = totalPriceHrk.add(new BigDecimal(item.getQuantity()).multiply(product.getPriceHrk()));
+                }
+            }
+            return null;
+
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Hnb> getHnbApi() {
+        return hnbRepository.findByCurrency(Currency.EUR);
+    }
+
     @Transactional
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
         List<OrderItem> orderItems = new ArrayList<>();
 
-        Optional<Customer> customer = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
+        Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
 
-        if(customer.isPresent()) {
-            customer.get().setFirstName(command.getCustomer().getFirstName());
-            customer.get().setLastName(command.getCustomer().getLastName());
-            customer.get().setEmail(command.getCustomer().getEmail());
-            session.update(customer);
+        if(customerOptional.isPresent()) {
+            customerOptional.get().setFirstName(command.getCustomer().getFirstName());
+            customerOptional.get().setLastName(command.getCustomer().getLastName());
+            customerOptional.get().setEmail(command.getCustomer().getEmail());
+            session.update(customerOptional.get());
+        }
+
+        command.getOrderItems().forEach(orderItem -> {
+            Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
+            if(orderItemOptional.isPresent()) {
+                Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
+                if(productOptional.isPresent() && productOptional.get().getIsAvailable()) {
+                    orderItemOptional.get().setQuantity(orderItem.getQuantity());
+                    session.update(orderItemOptional.get());
+                }
+            }
+        });
+
+        Optional<Order> orderOptional = orderRepositoryJpa.findById(command.getId());
+
+        if(orderOptional.isPresent()) {
+            if(orderOptional.get().getStatus().compareTo(Status.SUBMITTED) == 0) {
+                BigDecimal totalPriceHrk = new BigDecimal(0);
+                command.getOrderItems().stream().forEach(orderItem -> {
+                    Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
+                    if(productOptional.isPresent() && productOptional.get().getIsAvailable()) {
+                        totalPriceHrk.add(productOptional.get().getPriceHrk().multiply(new BigDecimal(orderItem.getQuantity())));
+                    }
+                });
+            }
         }
 
 //        Optional<OrderItem> order

@@ -3,6 +3,7 @@ package com.example.webshop.rest;
 
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.command.order.OrderSaveCommand;
+import com.example.webshop.model.hnb.Hnb;
 import com.example.webshop.service.order.OrderService;
 import com.example.webshop.service.order.OrderServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,15 @@ public class OrderController {
     @GetMapping("/id/{id}")
     public ResponseEntity<OrderDTO> findById(@PathVariable final Long id) {
         return orderService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(
+                        () -> ResponseEntity.notFound().build()
+                );
+    }
+
+    @GetMapping("/hnb")
+    public ResponseEntity<Hnb> getHnbAPI() {
+        return orderService.getHnbApi()
                 .map(ResponseEntity::ok)
                 .orElseGet(
                         () -> ResponseEntity.notFound().build()
