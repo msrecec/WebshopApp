@@ -1,4 +1,4 @@
-package com.example.webshop.model.orderItem;
+package com.example.webshop.command.orderItem;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @Getter
 @Setter
-public class OrderItemCommand {
+public class OrderItemSaveCommand {
     @NotNull(message = "quantity must not be null")
     @PositiveOrZero(message = "quantity must be positive or zero")
     private Integer quantity;

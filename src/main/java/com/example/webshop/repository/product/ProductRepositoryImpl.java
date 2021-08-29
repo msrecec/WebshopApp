@@ -1,14 +1,22 @@
 package com.example.webshop.repository.product;
 
 import com.example.webshop.model.product.Product;
+import org.hibernate.Session;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class ProductRepositoryImpl implements ProductRepository{
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private JdbcTemplate jdbc;
     private ProductRepositoryJpa productRepositoryJpa;
@@ -16,6 +24,12 @@ public class ProductRepositoryImpl implements ProductRepository{
     public ProductRepositoryImpl(JdbcTemplate jdbc, ProductRepositoryJpa productRepositoryJpa) {
         this.jdbc = jdbc;
         this.productRepositoryJpa = productRepositoryJpa;
+    }
+
+    @Bean
+    public Session getSession() {
+        Session session = entityManager.unwrap(Session.class);
+        return session;
     }
 
     @Override

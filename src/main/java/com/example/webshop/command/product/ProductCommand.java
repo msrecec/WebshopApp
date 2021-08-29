@@ -1,4 +1,4 @@
-package com.example.webshop.model.product;
+package com.example.webshop.command.product;
 
 import lombok.*;
 

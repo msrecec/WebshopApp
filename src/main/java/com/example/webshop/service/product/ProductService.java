@@ -1,8 +1,7 @@
 package com.example.webshop.service.product;
 
 import com.example.webshop.dto.product.ProductDTO;
-import com.example.webshop.model.product.Product;
-import com.example.webshop.model.product.ProductCommand;
+import com.example.webshop.command.product.ProductCommand;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package com.example.webshop.rest;
 
 import com.example.webshop.dto.product.ProductDTO;
-import com.example.webshop.model.product.ProductCommand;
+import com.example.webshop.command.product.ProductCommand;
 import com.example.webshop.service.product.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

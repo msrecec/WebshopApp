@@ -2,13 +2,9 @@ package com.example.webshop.rest;
 
 
 import com.example.webshop.dto.order.OrderDTO;
-import com.example.webshop.dto.product.ProductDTO;
-import com.example.webshop.model.order.Order;
-import com.example.webshop.model.order.OrderCommand;
-import com.example.webshop.model.product.ProductCommand;
+import com.example.webshop.command.order.OrderSaveCommand;
 import com.example.webshop.service.order.OrderService;
 import com.example.webshop.service.order.OrderServiceImpl;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +37,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> save(@Valid @RequestBody final OrderCommand command) {
+    public ResponseEntity<OrderDTO> save(@Valid @RequestBody final OrderSaveCommand command) {
         return orderService.save(command)
                 .map(
                         productDTO -> ResponseEntity
