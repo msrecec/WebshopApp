@@ -24,7 +24,6 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService{
 
 
@@ -109,6 +109,7 @@ public class OrderServiceImpl implements OrderService{
         if(order.isPresent()) {
             order.get().setOrderItems(orderItems);
         }
+
         return order.map(orderMapper::mapOrderToDTO);
     }
 
