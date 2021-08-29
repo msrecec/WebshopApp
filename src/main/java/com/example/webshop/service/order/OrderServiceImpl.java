@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -41,22 +42,32 @@ public class OrderServiceImpl implements OrderService{
         this.orderMapper = orderMapper;
     }
 
+    @Override
+    public List<OrderDTO> findAll() {
+        List<Order> orders = orderRepositoryJpa.findAll();
+        System.out.println("Printing order items");
+        orders.forEach(order -> {
+            order.getOrderItems().forEach(orderItem -> {
+                System.out.println("Product");
+                System.out.println(orderItem.getProduct().getName());
+                System.out.println(orderItem.getProduct().getCode());
+                System.out.println(orderItem.getProduct().getIsAvailable());
+                System.out.println("Order item quantity:");
+                System.out.println(orderItem.getQuantity());
+            });
+        });
+        return orders.stream().map(orderMapper::mapOrderToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<OrderDTO> findById(Long id) {
+        return orderRepositoryJpa.findById(id).map(orderMapper::mapOrderToDTO);
+    }
 
     @Override
     public Optional<OrderDTO> save(OrderCommand command) {
 
         List<OrderItem> orderItems = new ArrayList<>();
-
-        /**
-         * Saves orderItem to DB if product is available
-         */
-
-        for(OrderItemCommand orderItemCommand : command.getOrderItems()) {
-            Optional<Product> product = productRepositoryJpa.findByCode(orderItemCommand.getCode());
-            if(product.isPresent() && product.get().getIsAvailable()) {
-                orderItems.add(orderItemRepositoryJpa.save(OrderItem.builder().quantity(orderItemCommand.getQuantity()).product(product.get()).build()));
-            }
-        }
 
         Customer customer = customerRepositoryJpa.save(Customer.builder()
                 .firstName(command.getCustomer().getFirstName())
@@ -64,13 +75,41 @@ public class OrderServiceImpl implements OrderService{
                 .email(command.getCustomer().getEmail())
                 .build());
 
-        Order order = Order.builder()
+        Optional<Order> order = Optional.ofNullable(
+                orderRepositoryJpa.save(Order.builder()
                 .status(Status.DRAFT)
                 .customer(customer)
-                .orderItems(orderItems)
-                .build();
+                .build()));
 
-        return Optional.ofNullable(orderRepositoryJpa.save(order)).map(orderMapper::mapOrderToDTO);
+
+        /**
+         * Saves orderItem to DB if product is available
+         */
+
+        for(OrderItemCommand orderItemCommand : command.getOrderItems()) {
+
+            Optional<Product> product = productRepositoryJpa.findByCode(orderItemCommand.getCode());
+
+            if(product.isPresent() && product.get().getIsAvailable()) {
+
+                OrderItem orderItem  = OrderItem.builder()
+                        .quantity(orderItemCommand.getQuantity())
+                        .product(product.get())
+                        .build();
+
+                if(order.isPresent()) {
+                    orderItem.setOrder(order.get());
+                }
+
+                orderItems.add(orderItemRepositoryJpa.save(orderItem));
+            }
+        }
+
+        if(order.isPresent()) {
+            order.get().setOrderItems(orderItems);
+        }
+
+        return order.map(orderMapper::mapOrderToDTO);
 
     }
 }
