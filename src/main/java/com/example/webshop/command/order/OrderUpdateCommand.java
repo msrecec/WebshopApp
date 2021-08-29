@@ -7,6 +7,7 @@ import com.example.webshop.model.order.Status;
 import lombok.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
@@ -21,8 +22,8 @@ public class OrderUpdateCommand {
     @NotNull(message = "Order ID must not be null")
     @Positive(message = "Order ID must be a positive number")
     private Long id;
-    @Pattern(regexp = "/DRAFT|SUBMITTED/g", message = "Order status string must be either DRAFT or SUBMITTED")
-    private String status;
+    @NotNull(message = "Order status must not be null")
+    private Status status;
     @Valid
     private CustomerSaveCommand customer;
     @Valid

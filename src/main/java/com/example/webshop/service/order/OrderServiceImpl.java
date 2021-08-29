@@ -3,6 +3,7 @@ package com.example.webshop.service.order;
 import com.example.webshop.command.order.OrderSaveCommand;
 import com.example.webshop.command.order.OrderUpdateCommand;
 import com.example.webshop.command.orderItem.OrderItemSaveCommand;
+import com.example.webshop.command.orderItem.OrderItemUpdateCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.mapping.mapper.order.OrderMapper;
 import com.example.webshop.mapping.mapper.order.OrderMapperImpl;
@@ -153,7 +154,6 @@ public class OrderServiceImpl implements OrderService{
 
     @Transactional
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
-        List<OrderItem> orderItems = new ArrayList<>();
 
         Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
 
@@ -161,7 +161,7 @@ public class OrderServiceImpl implements OrderService{
             customerOptional.get().setFirstName(command.getCustomer().getFirstName());
             customerOptional.get().setLastName(command.getCustomer().getLastName());
             customerOptional.get().setEmail(command.getCustomer().getEmail());
-            session.update(customerOptional.get());
+            session.merge(customerOptional.get());
         }
 
         command.getOrderItems().forEach(orderItem -> {
@@ -170,7 +170,7 @@ public class OrderServiceImpl implements OrderService{
                 Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
                 if(productOptional.isPresent() && productOptional.get().getIsAvailable()) {
                     orderItemOptional.get().setQuantity(orderItem.getQuantity());
-                    session.update(orderItemOptional.get());
+                    session.merge(orderItemOptional.get());
                 }
             }
         });
@@ -178,18 +178,33 @@ public class OrderServiceImpl implements OrderService{
         Optional<Order> orderOptional = orderRepositoryJpa.findById(command.getId());
 
         if(orderOptional.isPresent()) {
-            if(orderOptional.get().getStatus().compareTo(Status.SUBMITTED) == 0) {
+            if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
                 BigDecimal totalPriceHrk = new BigDecimal(0);
-                command.getOrderItems().stream().forEach(orderItem -> {
+                for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
                     Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
-                    if(productOptional.isPresent() && productOptional.get().getIsAvailable()) {
-                        totalPriceHrk.add(productOptional.get().getPriceHrk().multiply(new BigDecimal(orderItem.getQuantity())));
+                    if (productOptional.isPresent() && productOptional.get().getIsAvailable()) {
+                        totalPriceHrk = totalPriceHrk.add(productOptional.get().getPriceHrk().multiply(new BigDecimal(orderItem.getQuantity())));
                     }
-                });
+                }
+                BigDecimal totalPriceEur = null;
+
+                Optional<Hnb> hnb = getHnbApi();
+
+                if(hnb.isPresent()) {
+                    totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+                }
+
+                orderOptional.get().setTotalPriceHrk(totalPriceHrk);
+                orderOptional.get().setTotalPriceEur(totalPriceEur);
+                orderOptional.get().setStatus(Status.SUBMITTED);
+            } else {
+                orderOptional.get().setTotalPriceHrk(null);
+                orderOptional.get().setTotalPriceEur(null);
+                orderOptional.get().setStatus(Status.DRAFT);
             }
+            session.merge(orderOptional.get());
         }
 
-//        Optional<OrderItem> order
-        return null;
+        return orderOptional.map(orderMapper::mapOrderToDTO);
     }
 }

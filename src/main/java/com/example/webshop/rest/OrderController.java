@@ -1,6 +1,7 @@
 package com.example.webshop.rest;
 
 
+import com.example.webshop.command.order.OrderUpdateCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.command.order.OrderSaveCommand;
 import com.example.webshop.model.hnb.Hnb;
@@ -59,9 +60,24 @@ public class OrderController {
     public ResponseEntity<OrderDTO> save(@Valid @RequestBody final OrderSaveCommand command) {
         return orderService.save(command)
                 .map(
-                        productDTO -> ResponseEntity
+                        orderDTO -> ResponseEntity
                                 .status(HttpStatus.CREATED)
-                                .body(productDTO)
+                                .body(orderDTO)
+                )
+                .orElseGet(
+                        () -> ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .build()
+                );
+    }
+
+    @PutMapping
+    public ResponseEntity<OrderDTO> update(@Valid @RequestBody final OrderUpdateCommand command) {
+        return orderService.update(command)
+                .map(
+                        orderDTO -> ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body(orderDTO)
                 )
                 .orElseGet(
                         () -> ResponseEntity
