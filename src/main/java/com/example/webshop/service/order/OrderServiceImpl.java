@@ -41,6 +41,10 @@ public class OrderServiceImpl implements OrderService{
 
         List<OrderItem> orderItems = new ArrayList<>();
 
+        /**
+         * Saves orderItem to DB if product is available
+         */
+
         for(OrderItemCommand orderItemCommand : command.getOrderItems()) {
             Optional<Product> product = productRepositoryJpa.findByCode(orderItemCommand.getCode());
             if(product.isPresent() && product.get().getIsAvailable()) {
@@ -54,7 +58,11 @@ public class OrderServiceImpl implements OrderService{
                 .email(command.getCustomer().getEmail())
                 .build());
 
-        Order order = Order.builder().status(Status.DRAFT).customer(customer).orderItems(orderItems).build();
+        Order order = Order.builder()
+                .status(Status.DRAFT)
+                .customer(customer)
+                .orderItems(orderItems)
+                .build();
 
         return Optional.ofNullable(orderRepositoryJpa.save(order));
 
