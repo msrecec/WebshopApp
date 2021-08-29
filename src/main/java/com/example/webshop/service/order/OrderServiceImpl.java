@@ -113,9 +113,11 @@ public class OrderServiceImpl implements OrderService{
         return order.map(orderMapper::mapOrderToDTO);
     }
 
+
     @Transactional
     public Optional<OrderDTO> finalizeOrder(Long id) {
         Optional<Order> orderOptional = orderRepositoryJpa.findById(id);
+        boolean productFoundFlag = false;
 
         if(orderOptional.isPresent()) {
             List<OrderItem> orderItems = orderOptional.get().getOrderItems();
@@ -127,8 +129,13 @@ public class OrderServiceImpl implements OrderService{
 
                 if(product.getIsAvailable()) {
                     totalPriceHrk = totalPriceHrk.add(new BigDecimal(item.getQuantity()).multiply(product.getPriceHrk()));
+                    productFoundFlag = true;
                 }
 
+            }
+
+            if(!productFoundFlag) {
+                return Optional.empty();
             }
 
             Optional<Hnb> hnb = getHnbApi();
