@@ -190,12 +190,24 @@ public class OrderServiceImpl implements OrderService{
 
         Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
 
+        /**
+         * If Customer is present in the DB update the customer
+         *
+         */
+
         if(customerOptional.isPresent()) {
             customerOptional.get().setFirstName(command.getCustomer().getFirstName());
             customerOptional.get().setLastName(command.getCustomer().getLastName());
             customerOptional.get().setEmail(command.getCustomer().getEmail());
             session.merge(customerOptional.get());
         } else {
+
+            /**
+             * If Customer is not present in the DB create the customer and add the customer to
+             * order object and update the order object with the newly created customer
+             *
+             */
+
             Customer customer = Customer.builder()
                     .firstName(command.getCustomer().getFirstName())
                     .lastName(command.getCustomer().getLastName())
@@ -213,23 +225,21 @@ public class OrderServiceImpl implements OrderService{
             }
         }
 
+        /**
+         * Updates the quantity of orderItems if product for the specific orderItem is present in the DB
+         *
+         */
+
         for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
             Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
             if(orderItemOptional.isPresent()) {
                 Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
-                if(productOptional.isPresent() && productOptional.get().getIsAvailable()) {
-                    productFoundFlag = true;
+                if(productOptional.isPresent()) {
                     orderItemOptional.get().setQuantity(orderItem.getQuantity());
                     session.merge(orderItemOptional.get());
                 }
             }
         }
-
-        if(!productFoundFlag) {
-            return Optional.empty();
-        }
-
-        productFoundFlag = false;
 
         Optional<Order> orderOptional = orderRepositoryJpa.findById(command.getId());
 
@@ -244,14 +254,25 @@ public class OrderServiceImpl implements OrderService{
                     }
                 }
 
+                /**
+                 * If product is present in the warehouse, finalize the order with the product
+                 * or else set the order to draft without prices
+                 *
+                 */
+
                 if(!productFoundFlag) {
                     orderOptional.get().setTotalPriceHrk(null);
                     orderOptional.get().setTotalPriceEur(null);
                     orderOptional.get().setStatus(Status.DRAFT);
                 } else {
-                    BigDecimal totalPriceEur = null;
+                    BigDecimal totalPriceEur;
 
                     Optional<Hnb> hnb = getHnbApi();
+
+                    /**
+                     * If hnb api doesn't work, don't finalize the order but set it to DRAFT
+                     *
+                     */
 
                     if(hnb.isPresent()) {
                         totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
