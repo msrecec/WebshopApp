@@ -77,11 +77,21 @@ public class OrderServiceImpl implements OrderService{
 
         List<OrderItem> orderItems = new ArrayList<>();
 
+        /**
+         * Saves customer based on customer data
+         *
+         */
+
         Customer customer = customerRepositoryJpa.save(Customer.builder()
                 .firstName(command.getCustomer().getFirstName())
                 .lastName(command.getCustomer().getLastName())
                 .email(command.getCustomer().getEmail())
                 .build());
+
+        /**
+         * Saves order as DRAFT based on customer object
+         *
+         */
 
         Optional<Order> order = Optional.ofNullable(
                 orderRepositoryJpa.save(Order.builder()
@@ -90,7 +100,8 @@ public class OrderServiceImpl implements OrderService{
                 .build()));
 
         /**
-         * Saves orderItem to DB if product is available
+         * Saves orderItem based on product to DB if product is available
+         *
          */
 
         for(OrderItemSaveCommand orderItemSaveCommand : command.getOrderItems()) {
@@ -124,6 +135,11 @@ public class OrderServiceImpl implements OrderService{
             BigDecimal totalPriceHrk = new BigDecimal(0);
             BigDecimal totalPriceEur;
 
+            /**
+             * Aggregates total price by orderItems quantity and product value
+             *
+             */
+
             for(OrderItem item : orderItems) {
                 Product product = item.getProduct();
 
@@ -137,6 +153,11 @@ public class OrderServiceImpl implements OrderService{
             if(!productFoundFlag) {
                 return Optional.empty();
             }
+
+            /**
+             * Gets Euro currency value in KN
+             *
+             */
 
             Optional<Hnb> hnb = getHnbApi();
 
@@ -165,6 +186,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Transactional
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
+        boolean productFoundFlag = false;
 
         Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
 
@@ -173,18 +195,41 @@ public class OrderServiceImpl implements OrderService{
             customerOptional.get().setLastName(command.getCustomer().getLastName());
             customerOptional.get().setEmail(command.getCustomer().getEmail());
             session.merge(customerOptional.get());
+        } else {
+            Customer customer = Customer.builder()
+                    .firstName(command.getCustomer().getFirstName())
+                    .lastName(command.getCustomer().getLastName())
+                    .email(command.getCustomer().getEmail())
+                    .build();
+
+            Optional<Order> order = orderRepositoryJpa.findById(command.getId());
+
+            if(order.isPresent()) {
+                customer = customerRepositoryJpa.save(customer);
+                order.get().setCustomer(customer);
+                session.merge(order.get());
+            } else {
+                return Optional.empty();
+            }
         }
 
-        command.getOrderItems().forEach(orderItem -> {
+        for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
             Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
             if(orderItemOptional.isPresent()) {
                 Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
                 if(productOptional.isPresent() && productOptional.get().getIsAvailable()) {
+                    productFoundFlag = true;
                     orderItemOptional.get().setQuantity(orderItem.getQuantity());
                     session.merge(orderItemOptional.get());
                 }
             }
-        });
+        }
+
+        if(!productFoundFlag) {
+            return Optional.empty();
+        }
+
+        productFoundFlag = false;
 
         Optional<Order> orderOptional = orderRepositoryJpa.findById(command.getId());
 
@@ -194,26 +239,41 @@ public class OrderServiceImpl implements OrderService{
                 for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
                     Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
                     if (productOptional.isPresent() && productOptional.get().getIsAvailable()) {
+                        productFoundFlag = true;
                         totalPriceHrk = totalPriceHrk.add(productOptional.get().getPriceHrk().multiply(new BigDecimal(orderItem.getQuantity())));
                     }
                 }
-                BigDecimal totalPriceEur = null;
 
-                Optional<Hnb> hnb = getHnbApi();
+                if(!productFoundFlag) {
+                    orderOptional.get().setTotalPriceHrk(null);
+                    orderOptional.get().setTotalPriceEur(null);
+                    orderOptional.get().setStatus(Status.DRAFT);
+                } else {
+                    BigDecimal totalPriceEur = null;
 
-                if(hnb.isPresent()) {
-                    totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+                    Optional<Hnb> hnb = getHnbApi();
+
+                    if(hnb.isPresent()) {
+                        totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+
+                        orderOptional.get().setTotalPriceHrk(totalPriceHrk);
+                        orderOptional.get().setTotalPriceEur(totalPriceEur);
+                        orderOptional.get().setStatus(Status.SUBMITTED);
+                    } else {
+                        orderOptional.get().setTotalPriceHrk(null);
+                        orderOptional.get().setTotalPriceEur(null);
+                        orderOptional.get().setStatus(Status.DRAFT);
+                    }
                 }
 
-                orderOptional.get().setTotalPriceHrk(totalPriceHrk);
-                orderOptional.get().setTotalPriceEur(totalPriceEur);
-                orderOptional.get().setStatus(Status.SUBMITTED);
             } else {
                 orderOptional.get().setTotalPriceHrk(null);
                 orderOptional.get().setTotalPriceEur(null);
                 orderOptional.get().setStatus(Status.DRAFT);
             }
             session.merge(orderOptional.get());
+        } else {
+            return Optional.empty();
         }
 
         return orderOptional.map(orderMapper::mapOrderToDTO);
