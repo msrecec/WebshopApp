@@ -1,6 +1,7 @@
 package com.example.webshop.service.customer;
 
-import com.example.webshop.command.customer.CustomerSingleCommand;
+import com.example.webshop.command.customer.CustomerSingleSaveCommand;
+import com.example.webshop.command.customer.CustomerSingleUpdateCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.mapping.mapper.customer.CustomerMapper;
 import com.example.webshop.mapping.mapper.customer.CustomerMapperImpl;
@@ -56,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Optional<CustomerDTO> save(CustomerSingleCommand command, Optional<Long> orderId) {
+    public Optional<CustomerDTO> save(CustomerSingleSaveCommand command, Optional<Long> orderId) {
         Customer customer;
         if(orderId.isPresent()) {
             Optional<Order> order = orderRepositoryJpa.findById(orderId.get());
@@ -90,7 +91,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Optional<CustomerDTO> update(CustomerSingleCommand command) {
+    public Optional<CustomerDTO> update(CustomerSingleUpdateCommand command) {
         Optional<Customer> customer = customerRepositoryJpa.findById(command.getId());
         if(customer.isPresent()) {
             customer.get().setFirstName(command.getFirstName());
@@ -100,15 +101,6 @@ public class CustomerServiceImpl implements CustomerService {
             return customer.map(mapper::mapCustomerToDTO);
         } else {
             return Optional.empty();
-        }
-    }
-
-    @Override
-    @Transactional
-    public void deleteById(Long id) {
-        Optional<Customer> customer = customerRepositoryJpa.findById(id);
-        if(customer.isPresent()) {
-            session.remove(customer.get());
         }
     }
 }

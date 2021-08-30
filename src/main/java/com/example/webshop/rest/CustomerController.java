@@ -1,6 +1,7 @@
 package com.example.webshop.rest;
 
-import com.example.webshop.command.customer.CustomerSingleCommand;
+import com.example.webshop.command.customer.CustomerSingleSaveCommand;
+import com.example.webshop.command.customer.CustomerSingleUpdateCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.service.customer.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    ResponseEntity<CustomerDTO> save(@Valid @RequestBody final CustomerSingleCommand command, @RequestParam(name = "orderId", required = false) Optional<Long> orderId) {
+    ResponseEntity<CustomerDTO> save(@Valid @RequestBody final CustomerSingleSaveCommand command, @RequestParam(name = "orderId", required = false) Optional<Long> orderId) {
         return customerService.save(command, orderId)
                 .map(
                      customerDTO -> ResponseEntity
@@ -50,7 +51,7 @@ public class CustomerController {
     }
 
     @PutMapping
-    ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerSingleCommand command) {
+    ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerSingleUpdateCommand command) {
         return customerService.update(command)
                 .map(
                         customerDTO -> ResponseEntity
@@ -63,9 +64,4 @@ public class CustomerController {
                 );
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/id/{id}")
-    public void delete(@PathVariable final Long id) {
-        customerService.deleteById(id);
-    }
 }

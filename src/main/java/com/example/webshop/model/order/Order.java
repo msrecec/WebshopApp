@@ -29,7 +29,7 @@ public class Order {
     private BigDecimal totalPriceHrk;
     @Column(name = "total_price_eur")
     private BigDecimal totalPriceEur;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Customer customer;
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
