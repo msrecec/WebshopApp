@@ -188,68 +188,70 @@ public class OrderServiceImpl implements OrderService{
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
         boolean productFoundFlag = false;
 
-        Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
-
-        /**
-         * If Customer is present in the DB update the customer
-         *
-         */
-
-        if(customerOptional.isPresent()) {
-            customerOptional.get().setFirstName(command.getCustomer().getFirstName());
-            customerOptional.get().setLastName(command.getCustomer().getLastName());
-            customerOptional.get().setEmail(command.getCustomer().getEmail());
-            session.merge(customerOptional.get());
-        } else {
-
-            /**
-             * If Customer is not present in the DB create the customer and add the customer to
-             * order object and update the order object with the newly created customer
-             *
-             */
-
-            Customer customer = Customer.builder()
-                    .firstName(command.getCustomer().getFirstName())
-                    .lastName(command.getCustomer().getLastName())
-                    .email(command.getCustomer().getEmail())
-                    .build();
-
-            Optional<Order> order = orderRepositoryJpa.findById(command.getId());
-
-            if(order.isPresent()) {
-                customer = customerRepositoryJpa.save(customer);
-                order.get().setCustomer(customer);
-                session.merge(order.get());
-            } else {
-                return Optional.empty();
-            }
-        }
-
-        /**
-         * Updates the quantity of orderItems if product for the specific orderItem is present in the DB
-         * if orderItem is not present in the database, create the new orderItem if product is present
-         *
-         */
-
-        for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
-            Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
-            if(orderItemOptional.isPresent()) {
-                Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
-                if(productOptional.isPresent()) {
-                    orderItemOptional.get().setQuantity(orderItem.getQuantity());
-                    session.merge(orderItemOptional.get());
-                }
-            } else {
-                Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
-                if(productOptional.isPresent()) {
-                    orderItemRepositoryJpa.save(OrderItem.builder().product(productOptional.get()).quantity(orderItem.getQuantity()).build());
-                }
-            }
-        }
-
         Optional<Order> orderOptional = orderRepositoryJpa.findById(command.getId());
 
         if(orderOptional.isPresent()) {
+
+            Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
+
+            /**
+             * If Customer is present in the DB update the customer
+             *
+             */
+
+            if(customerOptional.isPresent()) {
+                customerOptional.get().setFirstName(command.getCustomer().getFirstName());
+                customerOptional.get().setLastName(command.getCustomer().getLastName());
+                customerOptional.get().setEmail(command.getCustomer().getEmail());
+                session.merge(customerOptional.get());
+            } else {
+
+                /**
+                 * If Customer is not present in the DB create the customer and add the customer to
+                 * order object and update the order object with the newly created customer
+                 *
+                 */
+
+                Customer customer = Customer.builder()
+                        .firstName(command.getCustomer().getFirstName())
+                        .lastName(command.getCustomer().getLastName())
+                        .email(command.getCustomer().getEmail())
+                        .build();
+
+                Optional<Order> order = orderRepositoryJpa.findById(command.getId());
+
+                if(order.isPresent()) {
+                    customer = customerRepositoryJpa.save(customer);
+                    order.get().setCustomer(customer);
+                    session.merge(order.get());
+                } else {
+                    return Optional.empty();
+                }
+            }
+
+            /**
+             * Updates the quantity of orderItems if product for the specific orderItem is present in the DB
+             * if orderItem is not present in the database, create the new orderItem for given product and order
+             * if product is present
+             *
+             */
+
+            for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
+                Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
+                if(orderItemOptional.isPresent()) {
+                    Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
+                    if(productOptional.isPresent()) {
+                        orderItemOptional.get().setQuantity(orderItem.getQuantity());
+                        session.merge(orderItemOptional.get());
+                    }
+                } else {
+                    Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
+                    if(productOptional.isPresent()) {
+                        orderItemRepositoryJpa.save(OrderItem.builder().product(productOptional.get()).order(orderOptional.get()).quantity(orderItem.getQuantity()).build());
+                    }
+                }
+            }
+
             if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
                 BigDecimal totalPriceHrk = new BigDecimal(0);
                 for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
