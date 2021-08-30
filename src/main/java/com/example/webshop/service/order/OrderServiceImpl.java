@@ -227,6 +227,7 @@ public class OrderServiceImpl implements OrderService{
 
         /**
          * Updates the quantity of orderItems if product for the specific orderItem is present in the DB
+         * if orderItem is not present in the database, create the new orderItem if product is present
          *
          */
 
@@ -237,6 +238,11 @@ public class OrderServiceImpl implements OrderService{
                 if(productOptional.isPresent()) {
                     orderItemOptional.get().setQuantity(orderItem.getQuantity());
                     session.merge(orderItemOptional.get());
+                }
+            } else {
+                Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
+                if(productOptional.isPresent()) {
+                    orderItemRepositoryJpa.save(OrderItem.builder().product(productOptional.get()).quantity(orderItem.getQuantity()).build());
                 }
             }
         }
