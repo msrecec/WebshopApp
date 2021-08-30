@@ -71,6 +71,14 @@ public class OrderServiceImpl implements OrderService{
         return orderRepositoryJpa.findById(id).map(orderMapper::mapOrderToDTO);
     }
 
+    /**
+     * This method also violates Single Responsibility Principle but if the customer and orderItem
+     * creation has to be atomic the violation is justified
+     *
+     * @param command
+     * @return
+     */
+
     @Override
     @Transactional
     public Optional<OrderDTO> save(OrderSaveCommand command) {
