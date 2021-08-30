@@ -36,20 +36,6 @@ public class CustomerController {
                 );
     }
 
-    @PostMapping
-    ResponseEntity<CustomerDTO> save(@Valid @RequestBody final CustomerSingleSaveCommand command, @RequestParam(name = "orderId", required = false) Optional<Long> orderId) {
-        return customerService.save(command, orderId)
-                .map(
-                     customerDTO -> ResponseEntity
-                             .status(HttpStatus.CREATED)
-                             .body(customerDTO)
-                ).orElseGet(
-                        () -> ResponseEntity
-                                .status(HttpStatus.CONFLICT)
-                                .build()
-                );
-    }
-
     @PutMapping
     ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerSingleUpdateCommand command) {
         return customerService.update(command)

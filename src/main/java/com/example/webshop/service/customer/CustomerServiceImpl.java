@@ -47,47 +47,6 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepositoryJpa.findById(id).map(mapper::mapCustomerToDTO);
     }
 
-    /**
-     * Saves the customer to DB , if orderId is present it also updates order table to match foreign key of customer id
-     *
-     * @param command
-     * @param orderId
-     * @return
-     */
-
-    @Override
-    @Transactional
-    public Optional<CustomerDTO> save(CustomerSingleSaveCommand command, Optional<Long> orderId) {
-        Customer customer;
-        if(orderId.isPresent()) {
-            Optional<Order> order = orderRepositoryJpa.findById(orderId.get());
-            if(order.isPresent()) {
-                customer = Customer.builder()
-                        .firstName(command.getFirstName())
-                        .lastName(command.getLastName())
-                        .email(command.getEmail())
-                        .build();
-
-                customer = customerRepositoryJpa.save(customer);
-
-                order.get().setCustomer(customer);
-
-                session.merge(order.get());
-
-            } else {
-                return Optional.empty();
-            }
-        } else {
-            customer = Customer.builder()
-                    .firstName(command.getFirstName())
-                    .lastName(command.getLastName())
-                    .email(command.getEmail())
-                    .build();
-
-            customer = customerRepositoryJpa.save(customer);
-        }
-        return Optional.of(mapper.mapCustomerToDTO(customer));
-    }
 
     @Override
     @Transactional

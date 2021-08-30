@@ -10,6 +10,5 @@ import java.util.Optional;
 public interface CustomerService {
     List<CustomerDTO> findCustomers();
     Optional<CustomerDTO> findCustomerById(Long id);
-    Optional<CustomerDTO> save(CustomerSingleSaveCommand command, Optional<Long> orderId);
     Optional<CustomerDTO> update(CustomerSingleUpdateCommand command);
 }
