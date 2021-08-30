@@ -1,7 +1,6 @@
 package com.example.webshop.rest;
 
-import com.example.webshop.command.customer.CustomerSingleSaveCommand;
-import com.example.webshop.command.customer.CustomerSingleUpdateCommand;
+import com.example.webshop.command.customer.CustomerSingleCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.service.customer.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/customer")
@@ -37,7 +35,7 @@ public class CustomerController {
     }
 
     @PutMapping
-    ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerSingleUpdateCommand command) {
+    ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerSingleCommand command) {
         return customerService.update(command)
                 .map(
                         customerDTO -> ResponseEntity

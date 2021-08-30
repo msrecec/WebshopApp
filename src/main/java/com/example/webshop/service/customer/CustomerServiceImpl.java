@@ -1,12 +1,10 @@
 package com.example.webshop.service.customer;
 
-import com.example.webshop.command.customer.CustomerSingleSaveCommand;
-import com.example.webshop.command.customer.CustomerSingleUpdateCommand;
+import com.example.webshop.command.customer.CustomerSingleCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.mapping.mapper.customer.CustomerMapper;
 import com.example.webshop.mapping.mapper.customer.CustomerMapperImpl;
 import com.example.webshop.model.customer.Customer;
-import com.example.webshop.model.order.Order;
 import com.example.webshop.repository.customer.CustomerRepositoryJpa;
 import com.example.webshop.repository.order.OrderRepositoryJpa;
 import org.hibernate.Session;
@@ -50,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Optional<CustomerDTO> update(CustomerSingleUpdateCommand command) {
+    public Optional<CustomerDTO> update(CustomerSingleCommand command) {
         Optional<Customer> customer = customerRepositoryJpa.findById(command.getId());
         if(customer.isPresent()) {
             customer.get().setFirstName(command.getFirstName());
