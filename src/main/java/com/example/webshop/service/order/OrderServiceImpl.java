@@ -106,7 +106,7 @@ public class OrderServiceImpl implements OrderService{
 
         for(OrderItemSaveCommand orderItemSaveCommand : command.getOrderItems()) {
             Optional<Product> product = productRepositoryJpa.findByCode(orderItemSaveCommand.getCode());
-            if(product.isPresent() && product.get().getIsAvailable()) {
+            if(product.isPresent()) {
                 OrderItem orderItem  = OrderItem.builder()
                         .quantity(orderItemSaveCommand.getQuantity())
                         .product(product.get())
