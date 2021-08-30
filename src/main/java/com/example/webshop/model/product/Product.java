@@ -18,11 +18,13 @@ import java.util.List;
 @Setter
 public class Product {
     @Id
-    @SequenceGenerator(name = "product_sequence", sequenceName = "product_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
+//    @SequenceGenerator(name = "product_sequence", sequenceName = "product_sequence", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "code", nullable = false)
+//    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     private String code;
     @Column(name = "name")
     private String name;
