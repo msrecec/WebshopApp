@@ -184,6 +184,15 @@ public class OrderServiceImpl implements OrderService{
         return hnbRepository.findByCurrency(Currency.EUR);
     }
 
+    /**
+     * This method is an example of what not to do in an API,
+     * do not violate Single Responsibility Principle, but rather use a separate API
+     * to update and delete product and orderItem (and also save if necessary)
+     *
+     * @param command
+     * @return
+     */
+
     @Transactional
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
         boolean productFoundFlag = false;
