@@ -2,17 +2,17 @@ package com.example.webshop.command.orderItem;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class OrderItemSaveCommand {
+public class OrderItemMultipleUpdateCommand {
+    @NotNull(message = "Order item ID must not be null")
+    @Positive(message = "Order item ID must be a positive number")
+    private Long id;
     @NotNull(message = "quantity must not be null")
     @PositiveOrZero(message = "quantity must be positive or zero")
     private Integer quantity;

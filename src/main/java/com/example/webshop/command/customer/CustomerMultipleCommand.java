@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @Getter
 @Setter
-public class CustomerSaveCommand {
+public class CustomerMultipleCommand {
     @NotNull(message = "Customer first name must not be null")
     @NotBlank(message = "Customer first name must not be blank")
     @Size(min = 1, max = 50, message = "Customer first name must be between 1 and 50 characters")

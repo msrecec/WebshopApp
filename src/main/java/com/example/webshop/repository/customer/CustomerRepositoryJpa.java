@@ -12,4 +12,5 @@ public interface CustomerRepositoryJpa extends JpaRepository<Customer, Long> {
     Customer save(Customer customer);
     @Query(value = "SELECT * FROM customer INNER JOIN webshop_order ON customer.id = webshop_order.customer_id WHERE webshop_order.id = :id", nativeQuery = true)
     List<Customer> findByWebshopOrder_Id(@Param("id")Long id);
+    Optional<Customer> findById(Long id);
 }

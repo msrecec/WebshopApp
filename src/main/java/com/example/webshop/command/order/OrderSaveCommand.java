@@ -1,7 +1,7 @@
 package com.example.webshop.command.order;
 
-import com.example.webshop.command.customer.CustomerSaveCommand;
-import com.example.webshop.command.orderItem.OrderItemSaveCommand;
+import com.example.webshop.command.customer.CustomerMultipleCommand;
+import com.example.webshop.command.orderItem.OrderItemMultipleSaveCommand;
 import lombok.*;
 
 import javax.validation.Valid;
@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 public class OrderSaveCommand {
     @Valid
-    private CustomerSaveCommand customer;
+    private CustomerMultipleCommand customer;
     @Valid
-    private List<OrderItemSaveCommand> orderItems;
+    private List<OrderItemMultipleSaveCommand> orderItems;
 }

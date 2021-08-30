@@ -2,8 +2,8 @@ package com.example.webshop.service.order;
 
 import com.example.webshop.command.order.OrderSaveCommand;
 import com.example.webshop.command.order.OrderUpdateCommand;
-import com.example.webshop.command.orderItem.OrderItemSaveCommand;
-import com.example.webshop.command.orderItem.OrderItemUpdateCommand;
+import com.example.webshop.command.orderItem.OrderItemMultipleSaveCommand;
+import com.example.webshop.command.orderItem.OrderItemMultipleUpdateCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.mapping.mapper.order.OrderMapper;
 import com.example.webshop.mapping.mapper.order.OrderMapperImpl;
@@ -112,11 +112,11 @@ public class OrderServiceImpl implements OrderService{
          *
          */
 
-        for(OrderItemSaveCommand orderItemSaveCommand : command.getOrderItems()) {
-            Optional<Product> product = productRepositoryJpa.findByCode(orderItemSaveCommand.getCode());
+        for(OrderItemMultipleSaveCommand orderItemMultipleSaveCommand : command.getOrderItems()) {
+            Optional<Product> product = productRepositoryJpa.findByCode(orderItemMultipleSaveCommand.getCode());
             if(product.isPresent()) {
                 OrderItem orderItem  = OrderItem.builder()
-                        .quantity(orderItemSaveCommand.getQuantity())
+                        .quantity(orderItemMultipleSaveCommand.getQuantity())
                         .product(product.get())
                         .build();
                 if(order.isPresent()) {
@@ -253,7 +253,7 @@ public class OrderServiceImpl implements OrderService{
              *
              */
 
-            for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
+            for(OrderItemMultipleUpdateCommand orderItem : command.getOrderItems()) {
                 Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
                 if(orderItemOptional.isPresent()) {
                     Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
@@ -271,7 +271,7 @@ public class OrderServiceImpl implements OrderService{
 
             if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
                 BigDecimal totalPriceHrk = new BigDecimal(0);
-                for(OrderItemUpdateCommand orderItem : command.getOrderItems()) {
+                for(OrderItemMultipleUpdateCommand orderItem : command.getOrderItems()) {
                     Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
                     if (productOptional.isPresent() && productOptional.get().getIsAvailable()) {
                         productFoundFlag = true;

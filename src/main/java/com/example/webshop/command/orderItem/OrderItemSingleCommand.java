@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 @Builder
 @Getter
 @Setter
-public class OrderItemUpdateCommand {
+public class OrderItemSingleCommand {
     @NotNull(message = "Order item ID must not be null")
     @Positive(message = "Order item ID must be a positive number")
     private Long id;
