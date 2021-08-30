@@ -88,7 +88,7 @@ public class OrderController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/id/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable final Long id) {
         orderService.deleteById(id);
     }
 }
