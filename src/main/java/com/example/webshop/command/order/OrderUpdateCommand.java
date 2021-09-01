@@ -21,9 +21,5 @@ public class OrderUpdateCommand {
     private Long id;
     @NotNull(message = "Order status must not be null")
     private Status status;
-    @Valid
-    private CustomerMultipleCommand customer;
-    @Valid
-    private List<OrderItemMultipleUpdateCommand> orderItems;
 }
 

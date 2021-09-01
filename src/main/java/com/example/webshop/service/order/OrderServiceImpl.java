@@ -72,14 +72,6 @@ public class OrderServiceImpl implements OrderService{
         return orderRepositoryJpa.findById(id).map(orderMapper::mapOrderToDTO);
     }
 
-    /**
-     * This method also violates Single Responsibility Principle but if the customer and orderItem
-     * creation has to be atomic the violation is justified
-     *
-     * @param command
-     * @return
-     */
-
     @Override
     @Transactional
     public Optional<OrderDTO> save(OrderSaveCommand command) {
@@ -193,137 +185,13 @@ public class OrderServiceImpl implements OrderService{
         return hnbRepository.findByCurrency(Currency.EUR);
     }
 
-    /**
-     * This method is an example of what not to do in an API,
-     * do not violate Single Responsibility Principle, but rather use a separate API
-     * to update and delete product and orderItem (and also save if necessary)
-     *
-     * @param command
-     * @return
-     */
-
     @Transactional
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
-        boolean productFoundFlag = false;
-
-        Optional<Order> orderOptional = orderRepositoryJpa.findById(command.getId());
-
-        if(orderOptional.isPresent()) {
-
-            Optional<Customer> customerOptional = Optional.ofNullable(customerRepositoryJpa.findByWebshopOrder_Id(command.getId()).get(0));
-
-            /**
-             * If Customer is present in the DB update the customer
-             *
-             */
-
-            if(customerOptional.isPresent()) {
-                customerOptional.get().setFirstName(command.getCustomer().getFirstName());
-                customerOptional.get().setLastName(command.getCustomer().getLastName());
-                customerOptional.get().setEmail(command.getCustomer().getEmail());
-                session.merge(customerOptional.get());
-            } else {
-
-                /**
-                 * If Customer is not present in the DB create the customer and add the customer to
-                 * order object and update the order object with the newly created customer
-                 *
-                 */
-
-                Customer customer = Customer.builder()
-                        .firstName(command.getCustomer().getFirstName())
-                        .lastName(command.getCustomer().getLastName())
-                        .email(command.getCustomer().getEmail())
-                        .build();
-
-                Optional<Order> order = orderRepositoryJpa.findById(command.getId());
-
-                if(order.isPresent()) {
-                    customer = customerRepositoryJpa.save(customer);
-                    order.get().setCustomer(customer);
-                    session.merge(order.get());
-                } else {
-                    return Optional.empty();
-                }
-            }
-
-            /**
-             * Updates the quantity of orderItems if product for the specific orderItem is present in the DB
-             * if orderItem is not present in the database, create the new orderItem for given product and order
-             * if product is present
-             *
-             */
-
-            for(OrderItemMultipleUpdateCommand orderItem : command.getOrderItems()) {
-                Optional<OrderItem> orderItemOptional = orderItemRepositoryJpa.findById(orderItem.getId());
-                if(orderItemOptional.isPresent()) {
-                    Optional<Product> productOptional = Optional.ofNullable(productRepositoryJpa.findByOrderItem_Id(orderItem.getId()).get(0));
-                    if(productOptional.isPresent()) {
-                        orderItemOptional.get().setQuantity(orderItem.getQuantity());
-                        session.merge(orderItemOptional.get());
-                    }
-                } else {
-                    Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
-                    if(productOptional.isPresent()) {
-                        orderItemRepositoryJpa.save(OrderItem.builder().product(productOptional.get()).order(orderOptional.get()).quantity(orderItem.getQuantity()).build());
-                    }
-                }
-            }
-
-            if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
-                BigDecimal totalPriceHrk = new BigDecimal(0);
-                for(OrderItemMultipleUpdateCommand orderItem : command.getOrderItems()) {
-                    Optional<Product> productOptional = productRepositoryJpa.findByCode(orderItem.getCode());
-                    if (productOptional.isPresent() && productOptional.get().getIsAvailable()) {
-                        productFoundFlag = true;
-                        totalPriceHrk = totalPriceHrk.add(productOptional.get().getPriceHrk().multiply(new BigDecimal(orderItem.getQuantity())));
-                    }
-                }
-
-                /**
-                 * If product is present in the warehouse, finalize the order with the product
-                 * or else set the order to draft without prices
-                 *
-                 */
-
-                if(!productFoundFlag) {
-                    orderOptional.get().setTotalPriceHrk(null);
-                    orderOptional.get().setTotalPriceEur(null);
-                    orderOptional.get().setStatus(Status.DRAFT);
-                } else {
-                    BigDecimal totalPriceEur;
-
-                    Optional<Hnb> hnb = getHnbApi();
-
-                    /**
-                     * If hnb api doesn't work, don't finalize the order but set it to DRAFT
-                     *
-                     */
-
-                    if(hnb.isPresent()) {
-                        totalPriceEur = totalPriceHrk.divide(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")), 2, RoundingMode.HALF_UP);
-
-                        orderOptional.get().setTotalPriceHrk(totalPriceHrk);
-                        orderOptional.get().setTotalPriceEur(totalPriceEur);
-                        orderOptional.get().setStatus(Status.SUBMITTED);
-                    } else {
-                        orderOptional.get().setTotalPriceHrk(null);
-                        orderOptional.get().setTotalPriceEur(null);
-                        orderOptional.get().setStatus(Status.DRAFT);
-                    }
-                }
-
-            } else {
-                orderOptional.get().setTotalPriceHrk(null);
-                orderOptional.get().setTotalPriceEur(null);
-                orderOptional.get().setStatus(Status.DRAFT);
-            }
-            session.merge(orderOptional.get());
+        if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
+            return finalizeOrder(command.getId());
         } else {
             return Optional.empty();
         }
-
-        return orderOptional.map(orderMapper::mapOrderToDTO);
     }
 
     @Override
