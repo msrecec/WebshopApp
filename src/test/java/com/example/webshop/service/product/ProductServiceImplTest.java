@@ -40,6 +40,7 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(
         locations = "classpath:application-test.properties"
 )
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductServiceImplTest {
     @MockBean(name = "productRepositoryJpa")
     private ProductRepositoryJpa productRepositoryJpa;
