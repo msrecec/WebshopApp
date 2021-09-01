@@ -2,8 +2,8 @@ package com.example.webshop.service.order;
 
 import com.example.webshop.command.order.OrderSaveCommand;
 import com.example.webshop.command.order.OrderUpdateCommand;
-import com.example.webshop.command.orderItem.OrderItemMultipleSaveCommand;
-import com.example.webshop.command.orderItem.OrderItemMultipleUpdateCommand;
+import com.example.webshop.command.orderItem.multiple.OrderItemMultipleSaveCommand;
+import com.example.webshop.command.orderItem.multiple.OrderItemMultipleUpdateCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.mapping.mapper.order.OrderMapper;
 import com.example.webshop.mapping.mapper.order.OrderMapperImpl;

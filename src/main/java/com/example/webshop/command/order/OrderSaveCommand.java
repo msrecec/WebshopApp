@@ -1,7 +1,7 @@
 package com.example.webshop.command.order;
 
 import com.example.webshop.command.customer.CustomerMultipleCommand;
-import com.example.webshop.command.orderItem.OrderItemMultipleSaveCommand;
+import com.example.webshop.command.orderItem.multiple.OrderItemMultipleSaveCommand;
 import lombok.*;
 
 import javax.validation.Valid;

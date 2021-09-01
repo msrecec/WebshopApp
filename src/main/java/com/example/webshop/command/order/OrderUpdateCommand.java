@@ -1,7 +1,7 @@
 package com.example.webshop.command.order;
 
 import com.example.webshop.command.customer.CustomerMultipleCommand;
-import com.example.webshop.command.orderItem.OrderItemMultipleUpdateCommand;
+import com.example.webshop.command.orderItem.multiple.OrderItemMultipleUpdateCommand;
 import com.example.webshop.model.order.Status;
 import lombok.*;
 

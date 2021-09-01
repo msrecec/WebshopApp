@@ -1,7 +1,8 @@
 package com.example.webshop.rest;
 
 
-import com.example.webshop.command.orderItem.OrderItemSingleCommand;
+import com.example.webshop.command.orderItem.single.OrderItemSingleSaveCommand;
+import com.example.webshop.command.orderItem.single.OrderItemSingleUpdateCommand;
 import com.example.webshop.dto.orderItem.OrderItemDTO;
 import com.example.webshop.service.orderItem.OrderItemService;
 import com.example.webshop.service.orderItem.OrderItemServiceImpl;
@@ -43,7 +44,7 @@ public class OrderItemController {
     }
 
     @PutMapping
-    ResponseEntity<OrderItemDTO> update(@Valid @RequestBody final OrderItemSingleCommand command) {
+    ResponseEntity<OrderItemDTO> update(@Valid @RequestBody final OrderItemSingleUpdateCommand command) {
         return orderItemService.update(command)
                 .map(
                         orderItemDTO ->
@@ -56,4 +57,26 @@ public class OrderItemController {
                                 .build()
                 );
     }
+
+    @PostMapping
+    ResponseEntity<OrderItemDTO> save(@Valid @RequestBody final OrderItemSingleSaveCommand command) {
+        return orderItemService.save(command)
+                .map(
+                        orderItemDTO ->
+                                ResponseEntity
+                                        .status(HttpStatus.CREATED)
+                                        .body(orderItemDTO)
+                ).orElseGet(
+                        () -> ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .build()
+                );
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/id/{id}")
+    void deleteById(@PathVariable final Long id) {
+        orderItemService.deleteById(id);
+    }
+
 }
