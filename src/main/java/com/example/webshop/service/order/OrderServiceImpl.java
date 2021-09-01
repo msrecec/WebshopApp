@@ -187,8 +187,19 @@ public class OrderServiceImpl implements OrderService{
 
     @Transactional
     public Optional<OrderDTO> update(OrderUpdateCommand command) {
-        if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
-            return finalizeOrder(command.getId());
+        Optional<Order> order = orderRepositoryJpa.findById(command.getId());
+        if(order.isPresent()) {
+            if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {
+                return finalizeOrder(command.getId());
+            } else if(command.getStatus().compareTo(Status.DRAFT) == 0) {
+                order.get().setStatus(Status.DRAFT);
+                order.get().setTotalPriceEur(null);
+                order.get().setTotalPriceHrk(null);
+                session.merge(order.get());
+                return order.map(orderMapper::mapOrderToDTO);
+            } else {
+                return Optional.empty();
+            }
         } else {
             return Optional.empty();
         }
