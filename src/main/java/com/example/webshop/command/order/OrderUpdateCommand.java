@@ -1,14 +1,10 @@
 package com.example.webshop.command.order;
 
-import com.example.webshop.command.customer.CustomerMultipleCommand;
-import com.example.webshop.command.orderItem.multiple.OrderItemMultipleUpdateCommand;
 import com.example.webshop.model.order.Status;
 import lombok.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor

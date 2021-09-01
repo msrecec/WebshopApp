@@ -1,12 +1,11 @@
 package com.example.webshop.service.customer;
 
-import com.example.webshop.command.customer.CustomerSingleCommand;
+import com.example.webshop.command.customer.CustomerCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.mapping.mapper.customer.CustomerMapper;
 import com.example.webshop.mapping.mapper.customer.CustomerMapperImpl;
 import com.example.webshop.model.customer.Customer;
 import com.example.webshop.repository.customer.CustomerRepositoryJpa;
-import com.example.webshop.repository.order.OrderRepositoryJpa;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerMapper mapper;
     private final CustomerRepositoryJpa customerRepositoryJpa;
-    private final OrderRepositoryJpa orderRepositoryJpa;
     private final Session session;
 
     @Autowired
     public CustomerServiceImpl(CustomerMapperImpl mapper,
                                CustomerRepositoryJpa customerRepositoryJpa,
-                               OrderRepositoryJpa orderRepositoryJpa,
                                Session session) {
         this.mapper = mapper;
         this.customerRepositoryJpa = customerRepositoryJpa;
-        this.orderRepositoryJpa = orderRepositoryJpa;
         this.session = session;
     }
 
@@ -48,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Optional<CustomerDTO> update(CustomerSingleCommand command) {
+    public Optional<CustomerDTO> update(CustomerCommand command) {
         Optional<Customer> customer = customerRepositoryJpa.findById(command.getId());
         if(customer.isPresent()) {
             customer.get().setFirstName(command.getFirstName());

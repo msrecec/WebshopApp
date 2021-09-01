@@ -1,6 +1,6 @@
 package com.example.webshop.rest;
 
-import com.example.webshop.command.customer.CustomerSingleCommand;
+import com.example.webshop.command.customer.CustomerCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.service.customer.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     @PutMapping
-    ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerSingleCommand command) {
+    ResponseEntity<CustomerDTO> update(@Valid @RequestBody final CustomerCommand command) {
         return customerService.update(command)
                 .map(
                         customerDTO -> ResponseEntity

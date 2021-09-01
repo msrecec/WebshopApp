@@ -33,11 +33,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@TestPropertySource(
+        locations = "classpath:application-test.properties"
+)
 class ProductServiceImplTest {
     @MockBean(name = "productRepositoryJpa")
     private ProductRepositoryJpa productRepositoryJpa;
@@ -47,7 +49,7 @@ class ProductServiceImplTest {
     ProductService underTest;
 
     @Test
-    void save() {
+    void saveTest() {
         // given
 
         Product product = Product.builder()
@@ -69,7 +71,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void update () {
+    void updateTest () {
         // given
 
         Optional<Product> productOptional = Optional.of(Product.builder()
@@ -95,7 +97,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void findAllTest() {
 
         // given
 
@@ -128,7 +130,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findByCode() {
+    void findByCodeTest() {
 
         // given
 
@@ -151,5 +153,19 @@ class ProductServiceImplTest {
         assertThat(productDTOOptional.get().getName()).isEqualToIgnoringCase("Great product");
     }
 
+    @Test
+    void deleteTest() {
+
+        // given
+
+        // when
+
+        // then
+
+        underTest.deleteByCode("test");
+
+        verify(productRepository).delete("test");
+
+    }
 
 }

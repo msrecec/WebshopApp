@@ -1,4 +1,4 @@
-package com.example.webshop.command.customer;
+package com.example.webshop.command.order.nested;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @Getter
 @Setter
-public class CustomerMultipleCommand {
+public class CustomerInOrderCommand {
     @NotNull(message = "Customer first name must not be null")
     @NotBlank(message = "Customer first name must not be blank")
     @Size(min = 1, max = 50, message = "Customer first name must be between 1 and 50 characters")

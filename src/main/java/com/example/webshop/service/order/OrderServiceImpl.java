@@ -2,8 +2,7 @@ package com.example.webshop.service.order;
 
 import com.example.webshop.command.order.OrderSaveCommand;
 import com.example.webshop.command.order.OrderUpdateCommand;
-import com.example.webshop.command.orderItem.multiple.OrderItemMultipleSaveCommand;
-import com.example.webshop.command.orderItem.multiple.OrderItemMultipleUpdateCommand;
+import com.example.webshop.command.order.nested.OrderItemInOrderCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.mapping.mapper.order.OrderMapper;
 import com.example.webshop.mapping.mapper.order.OrderMapperImpl;
@@ -107,11 +106,11 @@ public class OrderServiceImpl implements OrderService{
          *
          */
 
-        for(OrderItemMultipleSaveCommand orderItemMultipleSaveCommand : command.getOrderItems()) {
-            Optional<Product> product = productRepositoryJpa.findByCode(orderItemMultipleSaveCommand.getCode());
+        for(OrderItemInOrderCommand orderItemInOrderCommand : command.getOrderItems()) {
+            Optional<Product> product = productRepositoryJpa.findByCode(orderItemInOrderCommand.getCode());
             if(product.isPresent()) {
                 OrderItem orderItem  = OrderItem.builder()
-                        .quantity(orderItemMultipleSaveCommand.getQuantity())
+                        .quantity(orderItemInOrderCommand.getQuantity())
                         .product(product.get())
                         .build();
                 if(order.isPresent()) {

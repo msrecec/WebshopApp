@@ -1,4 +1,4 @@
-package com.example.webshop.command.orderItem.single;
+package com.example.webshop.command.orderItem;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
 @Builder
 @Getter
 @Setter
-public class OrderItemSingleSaveCommand {
+public class OrderItemSaveCommand {
     @NotNull(message = "Order ID must not be null")
     @Positive(message = "Order ID must be a positive number")
     private Long orderId;
