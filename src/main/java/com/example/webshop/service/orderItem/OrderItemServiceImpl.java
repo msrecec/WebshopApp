@@ -88,9 +88,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public void deleteById(Long id) {
-        Optional<Order> order = orderRepositoryJpa.findById(id);
-        if(order.isPresent()) {
-            session.remove(order.get());
+        Optional<OrderItem> orderItem = orderItemRepositoryJpa.findById(id);
+        if(orderItem.isPresent()) {
+            session.remove(orderItem.get());
         }
     }
 }
