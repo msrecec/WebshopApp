@@ -14,6 +14,7 @@ import com.example.webshop.repository.product.ProductRepositoryJpa;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,6 +88,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         Optional<OrderItem> orderItem = orderItemRepositoryJpa.findById(id);
         if(orderItem.isPresent()) {
