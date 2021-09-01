@@ -11,7 +11,18 @@ CREATE TABLE product (
     UNIQUE(code)
 );
 
-DROP TABLE IF EXISTS order_item
+DROP TABLE IF EXISTS webshop_order;
+
+CREATE TABLE webshop_order (
+                               id INT AUTO_INCREMENT,
+                               customer_id INT NOT NULL,
+                               status VARCHAR(100) NOT NULL,
+                               total_price_hrk DECIMAL(10, 2),
+                               total_price_eur DECIMAL(10, 2),
+                               PRIMARY KEY(ID)
+);
+
+DROP TABLE IF EXISTS order_item;
 
 CREATE TABLE order_item (
     id INT AUTO_INCREMENT,
@@ -23,18 +34,7 @@ CREATE TABLE order_item (
     constraint product_id foreign key (product_id) references product(id)
 );
 
-DROP TABLE IF EXISTS webshop_order
-
-CREATE TABLE webshop_order (
-    id INT AUTO_INCREMENT,
-    customer_id INT NOT NULL,
-    status VARCHAR(100) NOT NULL,
-    total_price_hrk DECIMAL(10, 2),
-    total_price_eur DECIMAL(10, 2),
-    PRIMARY KEY(ID)
-);
-
-DROP TABLE IF EXISTS customer
+DROP TABLE IF EXISTS customer;
 
 CREATE TABLE customer (
     id INT AUTO_INCREMENT,
