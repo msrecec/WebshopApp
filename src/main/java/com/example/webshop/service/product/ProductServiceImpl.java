@@ -5,10 +5,10 @@ import com.example.webshop.mapping.mapper.product.ProductMapper;
 import com.example.webshop.mapping.mapper.product.ProductMapperImpl;
 import com.example.webshop.command.product.ProductCommand;
 import com.example.webshop.repository.product.ProductRepository;
-import com.example.webshop.repository.product.ProductRepositoryCrud;
 import com.example.webshop.repository.product.ProductRepositoryImpl;
 import com.example.webshop.repository.product.ProductRepositoryJpa;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +19,12 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private ProductMapper mapper;
     private ProductRepositoryJpa productRepositoryJpa;
-    private ProductRepositoryCrud productRepositoryCrud;
     private ProductRepository productRepository;
 
-    @Autowired
     public ProductServiceImpl(ProductMapperImpl mapper, ProductRepositoryJpa productRepositoryJpa,
-                              ProductRepositoryCrud productRepositoryCrud, ProductRepositoryImpl productRepository) {
+                              ProductRepository productRepository) {
         this.mapper = mapper;
         this.productRepositoryJpa = productRepositoryJpa;
-        this.productRepositoryCrud = productRepositoryCrud;
         this.productRepository = productRepository;
     }
 

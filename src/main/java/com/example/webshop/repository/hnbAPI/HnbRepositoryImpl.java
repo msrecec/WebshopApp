@@ -17,13 +17,11 @@ import java.util.Optional;
 @Repository
 public class HnbRepositoryImpl implements HnbRepository {
 
-    private static final String RESOURCE_URL = "https://api.hnb.hr/tecajn/v1?valuta=";
-
     @Override
-    public Optional<Hnb> findByCurrency(Currency currency) {
+    public Optional<Hnb> findByCurrency(Currency currency, String resource) {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity(RESOURCE_URL+currency.getCurrency(), String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity(resource+currency.getCurrency(), String.class);
             ObjectMapper objectMapper = new ObjectMapper();
             Hnb[] hnb = objectMapper.readValue(response.getBody(), Hnb[].class);
             return Optional.ofNullable(hnb[0]);

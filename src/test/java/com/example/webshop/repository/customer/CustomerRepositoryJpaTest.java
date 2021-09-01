@@ -18,9 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomerRepositoryJpaTest {
 
     @Autowired
-    CustomerRepositoryJpa customerRepositoryJpa;
-
-    //List<Customer> findByWebshopOrder_Id(@Param("id")Long id);
+    CustomerRepositoryJpa underTest;
 
     @Test
     void findByWebshopOrder_IdExistsTest() {
@@ -31,7 +29,7 @@ class CustomerRepositoryJpaTest {
 
         // when
 
-        List<Customer> customers = customerRepositoryJpa.findByWebshopOrder_Id(customerId);
+        List<Customer> customers = underTest.findByWebshopOrder_Id(customerId);
 
         // then
 
@@ -51,7 +49,7 @@ class CustomerRepositoryJpaTest {
 
         // when
 
-        List<Customer> customers = customerRepositoryJpa.findByWebshopOrder_Id(customerId);
+        List<Customer> customers = underTest.findByWebshopOrder_Id(customerId);
 
         // then
 
