@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -170,7 +171,7 @@ public class OrderServiceImpl implements OrderService{
             Optional<Hnb> hnb = getHnbApi();
 
             if(hnb.isPresent()) {
-                totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+                totalPriceEur = totalPriceHrk.divide(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")), 2, RoundingMode.HALF_UP);
             } else {
                 return Optional.empty();
             }
@@ -300,7 +301,7 @@ public class OrderServiceImpl implements OrderService{
                      */
 
                     if(hnb.isPresent()) {
-                        totalPriceEur = totalPriceHrk.multiply(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")));
+                        totalPriceEur = totalPriceHrk.divide(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")), 2, RoundingMode.HALF_UP);
 
                         orderOptional.get().setTotalPriceHrk(totalPriceHrk);
                         orderOptional.get().setTotalPriceEur(totalPriceEur);
