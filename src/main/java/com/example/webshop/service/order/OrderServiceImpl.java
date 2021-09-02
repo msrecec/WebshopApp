@@ -1,8 +1,8 @@
 package com.example.webshop.service.order;
 
-import com.example.webshop.command.order.OrderSaveCommand;
-import com.example.webshop.command.order.OrderUpdateCommand;
-import com.example.webshop.command.order.nested.OrderItemInOrderCommand;
+import com.example.webshop.command.order.OrderPostCommand;
+import com.example.webshop.command.order.OrderPutCommand;
+import com.example.webshop.command.order.nested.OrderItemNestedInOrderCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.mapping.mapper.order.OrderMapper;
 import com.example.webshop.mapping.mapper.order.OrderMapperImpl;
@@ -75,7 +75,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public Optional<OrderDTO> save(OrderSaveCommand command) {
+    public Optional<OrderDTO> save(OrderPostCommand command) {
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -106,11 +106,11 @@ public class OrderServiceImpl implements OrderService{
          *
          */
 
-        for(OrderItemInOrderCommand orderItemInOrderCommand : command.getOrderItems()) {
-            Optional<Product> product = productRepositoryJpa.findByCode(orderItemInOrderCommand.getCode());
+        for(OrderItemNestedInOrderCommand orderItemNestedInOrderCommand : command.getOrderItems()) {
+            Optional<Product> product = productRepositoryJpa.findByCode(orderItemNestedInOrderCommand.getCode());
             if(product.isPresent()) {
                 OrderItem orderItem  = OrderItem.builder()
-                        .quantity(orderItemInOrderCommand.getQuantity())
+                        .quantity(orderItemNestedInOrderCommand.getQuantity())
                         .product(product.get())
                         .build();
                 if(order.isPresent()) {
@@ -161,7 +161,7 @@ public class OrderServiceImpl implements OrderService{
              *
              */
 
-            Optional<Hnb> hnb = getHnbApi();
+            Optional<Hnb> hnb = hnbRepository.findByCurrency(Currency.EUR, RESOURCE_URL);
 
             if(hnb.isPresent()) {
                 totalPriceEur = totalPriceHrk.divide(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")), 2, RoundingMode.HALF_UP);
@@ -187,7 +187,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Transactional
-    public Optional<OrderDTO> update(OrderUpdateCommand command) {
+    public Optional<OrderDTO> update(OrderPutCommand command) {
         Optional<Order> order = orderRepositoryJpa.findById(command.getId());
         if(order.isPresent()) {
             if(command.getStatus().compareTo(Status.SUBMITTED) == 0) {

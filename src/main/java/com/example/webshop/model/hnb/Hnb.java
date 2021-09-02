@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@Builder
 public class Hnb {
     @JsonProperty("Broj tečajnice")
     private String brojTecajnice;

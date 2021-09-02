@@ -1,8 +1,8 @@
 package com.example.webshop.rest;
 
 
-import com.example.webshop.command.orderItem.OrderItemSaveCommand;
-import com.example.webshop.command.orderItem.OrderItemUpdateCommand;
+import com.example.webshop.command.orderItem.OrderItemPostCommand;
+import com.example.webshop.command.orderItem.OrderItemPutCommand;
 import com.example.webshop.dto.orderItem.OrderItemDTO;
 import com.example.webshop.service.orderItem.OrderItemService;
 import com.example.webshop.service.orderItem.OrderItemServiceImpl;
@@ -44,7 +44,7 @@ public class OrderItemController {
     }
 
     @PutMapping
-    ResponseEntity<OrderItemDTO> update(@Valid @RequestBody final OrderItemUpdateCommand command) {
+    ResponseEntity<OrderItemDTO> update(@Valid @RequestBody final OrderItemPutCommand command) {
         return orderItemService.update(command)
                 .map(
                         orderItemDTO ->
@@ -59,7 +59,7 @@ public class OrderItemController {
     }
 
     @PostMapping
-    ResponseEntity<OrderItemDTO> save(@Valid @RequestBody final OrderItemSaveCommand command) {
+    ResponseEntity<OrderItemDTO> save(@Valid @RequestBody final OrderItemPostCommand command) {
         return orderItemService.save(command)
                 .map(
                         orderItemDTO ->

@@ -1,7 +1,7 @@
 package com.example.webshop.service.orderItem;
 
-import com.example.webshop.command.orderItem.OrderItemSaveCommand;
-import com.example.webshop.command.orderItem.OrderItemUpdateCommand;
+import com.example.webshop.command.orderItem.OrderItemPostCommand;
+import com.example.webshop.command.orderItem.OrderItemPutCommand;
 import com.example.webshop.dto.orderItem.OrderItemDTO;
 import com.example.webshop.mapping.mapper.orderItem.OrderItemMapper;
 import com.example.webshop.mapping.mapper.orderItem.OrderItemMapperImpl;
@@ -51,7 +51,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public Optional<OrderItemDTO> update(OrderItemUpdateCommand command) {
+    public Optional<OrderItemDTO> update(OrderItemPutCommand command) {
         Optional<OrderItem> orderItem = orderItemRepositoryJpa.findById(command.getId());
         if(orderItem.isPresent()) {
             orderItem.get().setQuantity(command.getQuantity());
@@ -69,7 +69,7 @@ public class OrderItemServiceImpl implements OrderItemService {
      */
 
     @Override
-    public Optional<OrderItemDTO> save(OrderItemSaveCommand command) {
+    public Optional<OrderItemDTO> save(OrderItemPostCommand command) {
         Optional<Order> order = orderRepositoryJpa.findById(command.getOrderId());
         Optional<Product> product = productRepositoryJpa.findByCode(command.getCode());
         if(order.isPresent() && product.isPresent()) {

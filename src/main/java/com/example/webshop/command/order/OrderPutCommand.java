@@ -11,7 +11,7 @@ import javax.validation.constraints.Positive;
 @Builder
 @Getter
 @Setter
-public class OrderUpdateCommand {
+public class OrderPutCommand {
     @NotNull(message = "Order ID must not be null")
     @Positive(message = "Order ID must be a positive number")
     private Long id;

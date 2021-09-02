@@ -1,19 +1,18 @@
-package com.example.webshop.command.orderItem;
+package com.example.webshop.command.order.nested;
 
 import lombok.*;
 
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class OrderItemSaveCommand {
-    @NotNull(message = "Order ID must not be null")
-    @Positive(message = "Order ID must be a positive number")
-    private Long orderId;
+public class OrderItemNestedInOrderCommand {
     @NotNull(message = "quantity must not be null")
     @PositiveOrZero(message = "quantity must be positive or zero")
     private Integer quantity;

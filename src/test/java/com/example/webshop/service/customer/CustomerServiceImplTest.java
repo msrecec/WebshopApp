@@ -30,7 +30,7 @@ class CustomerServiceImplTest {
     @MockBean
     private CustomerRepositoryJpa customerRepositoryJpa;
     @Autowired
-    private CustomerService customerService;
+    private CustomerService underTest;
 
     @Test
     void findCustomersTest() {
@@ -50,7 +50,7 @@ class CustomerServiceImplTest {
 
         // when
 
-        List<CustomerDTO> customerDTOS = customerService.findCustomers();
+        List<CustomerDTO> customerDTOS = underTest.findCustomers();
 
         // then
 
@@ -75,7 +75,7 @@ class CustomerServiceImplTest {
 
         // when
 
-        Optional<CustomerDTO> customers = customerService.findCustomerById(1L);
+        Optional<CustomerDTO> customers = underTest.findCustomerById(1L);
 
         // then
 
@@ -106,7 +106,7 @@ class CustomerServiceImplTest {
 
         // when
 
-        Optional<CustomerDTO> customerDTOOptional = customerService.update(command);
+        Optional<CustomerDTO> customerDTOOptional = underTest.update(command);
 
         // then
 
@@ -130,7 +130,7 @@ class CustomerServiceImplTest {
 
         // when
 
-        Optional<CustomerDTO> customerDTOOptional = customerService.update(command);
+        Optional<CustomerDTO> customerDTOOptional = underTest.update(command);
 
         // then
 
