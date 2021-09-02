@@ -132,4 +132,14 @@ class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$.description").value("test"))
                 .andExpect(jsonPath("$.priceHrk").value(new BigDecimal(100)));
     }
+
+    @Test
+    @DirtiesContext
+    void delete() throws Exception {
+
+        this.mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/v1/product/code/{code}", "1234567890")
+        ).andExpect(status().isNoContent());
+
+    }
 }

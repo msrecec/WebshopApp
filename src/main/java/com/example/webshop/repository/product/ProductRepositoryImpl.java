@@ -59,6 +59,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     @Transactional
     public void delete(String code) {
         Optional<Product> product = productRepositoryJpa.findByCode(code);
+        product.ifPresent(value -> jdbc.update("DELETE FROM order_item WHERE order_item.id IN (SELECT order_item.id FROM order_item INNER JOIN product ON order_item.product_id = product.id WHERE product.code = ?)", value.getCode()));
         product.ifPresent(value -> jdbc.update("DELETE FROM product WHERE code = ?", value.getCode()));
     }
 }
