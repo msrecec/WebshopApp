@@ -219,7 +219,7 @@ class ProductControllerTest {
 
 
     @Test
-    void delete() throws Exception {
+    void deleteTest() throws Exception {
 
         this.mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/v1/product/code/{code}", "test")

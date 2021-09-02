@@ -65,7 +65,7 @@ class ProductControllerIntegrationTest {
 
 
     @Test
-    void getAllProductsExistsTest() throws Exception {
+    void getAllProductsExistsIT() throws Exception {
 
         this.mockMvc.perform(
                         get("/api/v1/product")
@@ -79,7 +79,7 @@ class ProductControllerIntegrationTest {
 // VALUES ('1234567890', 'Great product', 1000, 'This is a great product', true);
 
     @Test
-    void getProductByCodeExistsTest() throws Exception {
+    void getProductByCodeExistsIT() throws Exception {
 
         this.mockMvc.perform(
                         get("/api/v1/product/code/{code}", "1234567890")
@@ -95,7 +95,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DirtiesContext
-    void saveExistsTest() throws Exception {
+    void saveExistsIT() throws Exception {
         command.setCode("1234567891");
 
         this.mockMvc.perform(
@@ -116,7 +116,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DirtiesContext
-    void updateExistsTest() throws Exception {
+    void updateExistsIT() throws Exception {
 
         this.mockMvc.perform(
                         put("/api/v1/product")
@@ -135,7 +135,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DirtiesContext
-    void delete() throws Exception {
+    void deleteIT() throws Exception {
 
         this.mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/v1/product/code/{code}", "1234567890")

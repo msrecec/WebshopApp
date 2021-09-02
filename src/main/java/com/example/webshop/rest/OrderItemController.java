@@ -19,7 +19,7 @@ public class OrderItemController {
 
     private final OrderItemService orderItemService;
 
-    public OrderItemController(OrderItemServiceImpl orderItemService) {
+    public OrderItemController(OrderItemService orderItemService) {
         this.orderItemService = orderItemService;
     }
 
