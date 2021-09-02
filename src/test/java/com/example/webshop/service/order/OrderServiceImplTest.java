@@ -180,7 +180,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void update() {
+    void updateTest() {
 
         // given
 
@@ -207,7 +207,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteByIdTest() {
 
         // given
 

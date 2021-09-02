@@ -96,7 +96,7 @@ class ProductRepositoryImplTest {
     @Test
     @Transactional
     @DirtiesContext
-    void delete() {
+    void deleteTest() {
 
         // given
 

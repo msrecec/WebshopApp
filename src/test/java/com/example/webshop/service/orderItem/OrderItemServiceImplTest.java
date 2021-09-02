@@ -92,7 +92,7 @@ class OrderItemServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void findAllTest() {
 
         // given
 
@@ -121,7 +121,7 @@ class OrderItemServiceImplTest {
     }
 
     @Test
-    void findById() {
+    void findByIdTest() {
 
         // given
 
@@ -140,7 +140,7 @@ class OrderItemServiceImplTest {
     }
 
     @Test
-    void update() {
+    void updateTest() {
 
         // given
 
@@ -162,7 +162,7 @@ class OrderItemServiceImplTest {
     }
 
     @Test
-    void save() {
+    void saveTest() {
 
         // given
 
@@ -184,7 +184,7 @@ class OrderItemServiceImplTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteByIdTest() {
 
         // given
 

@@ -23,7 +23,7 @@ class ProductRepositoryJpaTest {
     ProductRepositoryJpa productRepositoryJpa;
 
     @Test
-    void findByOrderItem_Id() {
+    void findByOrderItem_IdTest() {
 
         // given
 
