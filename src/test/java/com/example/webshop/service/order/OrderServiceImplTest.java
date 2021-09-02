@@ -18,6 +18,7 @@ import com.example.webshop.repository.order.OrderRepositoryJpa;
 import com.example.webshop.repository.orderItem.OrderItemRepositoryJpa;
 import com.example.webshop.repository.product.ProductRepositoryJpa;
 import org.hibernate.Session;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,35 +53,45 @@ class OrderServiceImplTest {
     @Autowired
     OrderService underTest;
 
-    @Test
-    void findAllTest() {
+    Order order;
+    Customer customer;
+    Product product;
+    OrderItem orderItem;
 
-        // given
-
-        List<Order> orderList = new ArrayList<>();
-        Order order = Order.builder()
+    @BeforeEach
+    void setUp() {
+        order = Order.builder()
                 .id(1L)
                 .status(Status.DRAFT)
                 .totalPriceHrk(new BigDecimal(100))
                 .totalPriceEur(new BigDecimal(100))
                 .build();
 
-        Customer customer = Customer.builder()
+        customer = Customer.builder()
                 .id(1L)
                 .firstName("test")
                 .lastName("test")
                 .email("test@test.com").build();
 
-        Product product = Product.builder()
+        product = Product.builder()
                 .code("1234567891").description("test").isAvailable(true).name("test").priceHrk(new BigDecimal(100)).build();
 
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
+        orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
 
         List<OrderItem> orderItemList = new ArrayList<>();
         orderItemList.add(orderItem);
 
         order.setCustomer(customer);
         order.setOrderItems(orderItemList);
+
+    }
+
+    @Test
+    void findAllTest() {
+
+        // given
+
+        List<Order> orderList = new ArrayList<>();
 
         orderList.add(order);
 
@@ -103,30 +114,6 @@ class OrderServiceImplTest {
 
         // given
 
-        Order order = Order.builder()
-                .id(1L)
-                .status(Status.DRAFT)
-                .totalPriceHrk(new BigDecimal(100))
-                .totalPriceEur(new BigDecimal(100))
-                .build();
-
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        Product product = Product.builder()
-                .code("1234567891").description("test").isAvailable(true).name("test").priceHrk(new BigDecimal(100)).build();
-
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
-
-        List<OrderItem> orderItemList = new ArrayList<>();
-        orderItemList.add(orderItem);
-
-        order.setCustomer(customer);
-        order.setOrderItems(orderItemList);
-
         when(orderRepositoryJpa.findById(1L)).thenReturn(Optional.of(order));
 
         // when
@@ -145,31 +132,6 @@ class OrderServiceImplTest {
     void saveTest() {
 
         // given
-
-        Order order = Order.builder()
-                .id(1L)
-                .status(Status.DRAFT)
-                .totalPriceHrk(new BigDecimal(100))
-                .totalPriceEur(new BigDecimal(100))
-                .build();
-
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        Product product = Product.builder()
-                .code("1234567891").description("test").isAvailable(true).name("test").priceHrk(new BigDecimal(100)).build();
-
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
-
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        orderItemList.add(orderItem);
-
-        order.setCustomer(customer);
-        order.setOrderItems(orderItemList);
 
         OrderItemNestedInOrderCommand item = OrderItemNestedInOrderCommand.builder().quantity(1).code("test").build();
 
@@ -200,31 +162,6 @@ class OrderServiceImplTest {
 
         // given
 
-        Order order = Order.builder()
-                .id(1L)
-                .status(Status.DRAFT)
-                .totalPriceHrk(new BigDecimal(100))
-                .totalPriceEur(new BigDecimal(100))
-                .build();
-
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        Product product = Product.builder()
-                .code("1234567891").description("test").isAvailable(true).name("test").priceHrk(new BigDecimal(100)).build();
-
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
-
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        orderItemList.add(orderItem);
-
-        order.setCustomer(customer);
-        order.setOrderItems(orderItemList);
-
         when(orderRepositoryJpa.findById(1L)).thenReturn(Optional.of(order));
         when(session.merge(any())).thenReturn(new Object());
         when(hnbRepository.findByCurrency(Currency.EUR, "https://api.hnb.hr/tecajn/v1?valuta="))
@@ -247,39 +184,11 @@ class OrderServiceImplTest {
 
         // given
 
-        Order order = Order.builder()
-                .id(1L)
-                .status(Status.DRAFT)
-                .totalPriceHrk(new BigDecimal(100))
-                .totalPriceEur(new BigDecimal(100))
-                .build();
-
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        Product product = Product.builder()
-                .code("1234567891").description("test").isAvailable(true).name("test").priceHrk(new BigDecimal(100)).build();
-
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
-
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        orderItemList.add(orderItem);
-
-        order.setCustomer(customer);
-        order.setOrderItems(orderItemList);
-
         OrderItemNestedInOrderCommand item = OrderItemNestedInOrderCommand.builder().quantity(1).code("test").build();
 
         List<OrderItemNestedInOrderCommand> itemList = new ArrayList<>();
 
         itemList.add(item);
-
-        CustomerNestedInOrderCommand customerNestedInOrderCommand = CustomerNestedInOrderCommand.builder()
-                .email(customer.getEmail()).firstName(customer.getFirstName()).lastName(customer.getLastName()).build();
 
         OrderPutCommand command = OrderPutCommand.builder().id(1L).status(Status.DRAFT).build();
 
@@ -301,31 +210,6 @@ class OrderServiceImplTest {
     void deleteById() {
 
         // given
-
-        Order order = Order.builder()
-                .id(1L)
-                .status(Status.DRAFT)
-                .totalPriceHrk(new BigDecimal(100))
-                .totalPriceEur(new BigDecimal(100))
-                .build();
-
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        Product product = Product.builder()
-                .code("1234567891").description("test").isAvailable(true).name("test").priceHrk(new BigDecimal(100)).build();
-
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
-
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        orderItemList.add(orderItem);
-
-        order.setCustomer(customer);
-        order.setOrderItems(orderItemList);
 
         when(orderRepositoryJpa.findById(1L)).thenReturn(Optional.of(order));
 

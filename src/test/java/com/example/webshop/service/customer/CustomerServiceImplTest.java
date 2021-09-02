@@ -4,6 +4,7 @@ import com.example.webshop.command.customer.CustomerCommand;
 import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.model.customer.Customer;
 import com.example.webshop.repository.customer.CustomerRepositoryJpa;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,16 +33,28 @@ class CustomerServiceImplTest {
     @Autowired
     private CustomerService underTest;
 
-    @Test
-    void findCustomersTest() {
+    Customer customer;
+    CustomerCommand customerCommand;
 
-        // given
-
-        Customer customer = Customer.builder()
+    @BeforeEach
+    void setUp() {
+        this.customer = Customer.builder()
                 .id(1L)
                 .firstName("test")
                 .lastName("test")
                 .email("test@test.com").build();
+
+        this.customerCommand = CustomerCommand.builder()
+                .id(1L)
+                .firstName("test")
+                .lastName("test")
+                .email("test@test.com").build();
+    }
+
+    @Test
+    void findCustomersTest() {
+
+        // given
 
         List<Customer> customerList = new ArrayList<>();
         customerList.add(customer);
@@ -65,12 +78,6 @@ class CustomerServiceImplTest {
 
         // given
 
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
         when(customerRepositoryJpa.findById(1L)).thenReturn(Optional.of(customer));
 
         // when
@@ -89,24 +96,13 @@ class CustomerServiceImplTest {
     void updateExistsTest() {
 
         // given
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        CustomerCommand command = CustomerCommand.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
 
 
         when(customerRepositoryJpa.findById(1L)).thenReturn(Optional.of(customer));
 
         // when
 
-        Optional<CustomerDTO> customerDTOOptional = underTest.update(command);
+        Optional<CustomerDTO> customerDTOOptional = underTest.update(customerCommand);
 
         // then
 
@@ -119,18 +115,12 @@ class CustomerServiceImplTest {
     void updateNotExistsTest() {
 
         // given
-        CustomerCommand command = CustomerCommand.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
 
         when(customerRepositoryJpa.findById(1L)).thenReturn(Optional.empty());
 
         // when
 
-        Optional<CustomerDTO> customerDTOOptional = underTest.update(command);
+        Optional<CustomerDTO> customerDTOOptional = underTest.update(customerCommand);
 
         // then
 

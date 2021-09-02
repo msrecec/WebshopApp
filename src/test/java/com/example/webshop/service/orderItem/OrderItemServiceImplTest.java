@@ -10,7 +10,9 @@ import com.example.webshop.model.product.Product;
 import com.example.webshop.repository.order.OrderRepositoryJpa;
 import com.example.webshop.repository.orderItem.OrderItemRepositoryJpa;
 import com.example.webshop.repository.product.ProductRepositoryJpa;
+import org.aspectj.lang.annotation.Before;
 import org.hibernate.Session;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,29 +49,35 @@ class OrderItemServiceImplTest {
     @Autowired
     OrderItemService underTest;
 
-    @Test
-    void findAll() {
+    Order order;
 
-        // given
+    Customer customer;
 
-        Order order = Order.builder()
+    Product product;
+
+    OrderItem orderItem;
+
+    @BeforeEach
+    void setUp() {
+
+        order = Order.builder()
                 .id(1L)
                 .status(Status.DRAFT)
                 .totalPriceHrk(new BigDecimal(100))
                 .totalPriceEur(new BigDecimal(100))
                 .build();
 
-        Customer customer = Customer.builder()
+        customer = Customer.builder()
                 .id(1L)
                 .firstName("test")
                 .lastName("test")
                 .email("test@test.com").build();
 
-        Product product = Product.builder()
+        product = Product.builder()
                 .code("1234567891").description("test").isAvailable(true)
                 .name("test").priceHrk(new BigDecimal(100)).build();
 
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
+        orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
 
         List<OrderItem> orderItemList = new ArrayList<>();
 
@@ -79,8 +87,23 @@ class OrderItemServiceImplTest {
         order.setOrderItems(orderItemList);
 
         orderItem.setOrder(order);
+    }
 
-        when(orderItemRepositoryJpa.findAll()).thenReturn(orderItemList);
+    @Test
+    void findAll() {
+
+        // given
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        orderItems.add(orderItem);
+
+        order.setCustomer(customer);
+        order.setOrderItems(orderItems);
+
+        orderItem.setOrder(order);
+
+        when(orderItemRepositoryJpa.findAll()).thenReturn(orderItems);
 
         // when
 
@@ -99,34 +122,6 @@ class OrderItemServiceImplTest {
     void findById() {
 
         // given
-
-        Order order = Order.builder()
-                .id(1L)
-                .status(Status.DRAFT)
-                .totalPriceHrk(new BigDecimal(100))
-                .totalPriceEur(new BigDecimal(100))
-                .build();
-
-        Customer customer = Customer.builder()
-                .id(1L)
-                .firstName("test")
-                .lastName("test")
-                .email("test@test.com").build();
-
-        Product product = Product.builder()
-                .code("1234567891").description("test").isAvailable(true)
-                .name("test").priceHrk(new BigDecimal(100)).build();
-
-        OrderItem orderItem = OrderItem.builder().quantity(1).id(1L).product(product).build();
-
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        orderItemList.add(orderItem);
-
-        order.setCustomer(customer);
-        order.setOrderItems(orderItemList);
-
-        orderItem.setOrder(order);
 
         when(orderItemRepositoryJpa.findById(1L)).thenReturn(Optional.of(orderItem));
 
