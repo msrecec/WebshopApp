@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(
         locations = "classpath:application-test.properties"
 )
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductControllerTest {
 
     @Autowired
@@ -118,14 +119,14 @@ class ProductControllerTest {
 
     @Test
     void getProductByCodeExistsTest() throws Exception {
-        when(productService.findByCode("test")).thenReturn(Optional.of(productDTO));
+        when(productService.findByCode("1234567890")).thenReturn(Optional.of(productDTO));
 
         this.mockMvc.perform(
-                get("/api/v1/product/code/{code}", "test")
+                get("/api/v1/product/code/{code}", "1234567890")
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.code").value("test"))
+                .andExpect(jsonPath("$.code").value("1234567890"))
                 .andExpect(jsonPath("$.isAvailable").value(true))
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.description").value("test"))

@@ -51,8 +51,8 @@ public class OrderServiceImpl implements OrderService{
                             ProductRepositoryJpa productRepositoryJpa,
                             CustomerRepositoryJpa customerRepositoryJpa,
                             OrderRepositoryJpa orderRepositoryJpa,
-                            HnbRepositoryImpl hnbRepository,
-                            OrderMapperImpl orderMapper,
+                            HnbRepository hnbRepository,
+                            OrderMapper orderMapper,
                             Session session) {
         this.orderItemRepositoryJpa = orderItemRepositoryJpa;
         this.productRepositoryJpa = productRepositoryJpa;

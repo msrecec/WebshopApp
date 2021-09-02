@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepositoryJpa productRepositoryJpa;
     private ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductMapperImpl mapper, ProductRepositoryJpa productRepositoryJpa,
+    public ProductServiceImpl(ProductMapper mapper, ProductRepositoryJpa productRepositoryJpa,
                               ProductRepository productRepository) {
         this.mapper = mapper;
         this.productRepositoryJpa = productRepositoryJpa;

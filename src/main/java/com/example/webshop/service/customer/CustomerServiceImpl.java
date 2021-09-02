@@ -23,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final Session session;
 
     @Autowired
-    public CustomerServiceImpl(CustomerMapperImpl mapper,
+    public CustomerServiceImpl(CustomerMapper mapper,
                                CustomerRepositoryJpa customerRepositoryJpa,
                                Session session) {
         this.mapper = mapper;

@@ -29,7 +29,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final Session session;
 
     public OrderItemServiceImpl(OrderItemRepositoryJpa orderItemRepositoryJpa,
-                                OrderItemMapperImpl mapper,
+                                OrderItemMapper mapper,
                                 OrderRepositoryJpa orderRepositoryJpa,
                                 ProductRepositoryJpa productRepositoryJpa,
                                 Session session) {

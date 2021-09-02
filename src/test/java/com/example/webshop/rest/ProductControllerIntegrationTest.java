@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(
         locations = "classpath:application-test.properties"
 )
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductControllerIntegrationTest {
 
     @Autowired
@@ -94,7 +95,6 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void saveExistsIT() throws Exception {
         command.setCode("1234567891");
 
@@ -115,7 +115,6 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void updateExistsIT() throws Exception {
 
         this.mockMvc.perform(
@@ -134,7 +133,6 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void deleteIT() throws Exception {
 
         this.mockMvc.perform(
