@@ -1,5 +1,7 @@
 package com.example.webshop.service.orderItem;
 
+import com.example.webshop.command.orderItem.OrderItemPostCommand;
+import com.example.webshop.command.orderItem.OrderItemPutCommand;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.dto.orderItem.OrderItemDTO;
 import com.example.webshop.model.customer.Customer;
@@ -139,13 +141,62 @@ class OrderItemServiceImplTest {
 
     @Test
     void update() {
+
+        // given
+
+        OrderItemPutCommand command = OrderItemPutCommand.builder().id(1L).code("test").quantity(1).build();
+
+        when(orderItemRepositoryJpa.findById(1L)).thenReturn(Optional.of(orderItem));
+
+        // when
+
+        Optional<OrderItemDTO> orderItemDTO = underTest.update(command);
+
+        // then
+
+        assertThat(orderItemDTO.isPresent()).isTrue();
+        assertThat(orderItemDTO.get().getId()).isEqualTo(1L);
+        assertThat(orderItemDTO.get().getQuantity()).isEqualTo(1);
+        assertThat(orderItemDTO.get().getProduct().getName()).isEqualTo("test");
+
     }
 
     @Test
     void save() {
+
+        // given
+
+        OrderItemPostCommand command = OrderItemPostCommand.builder().orderId(1L).code("test").quantity(1).build();
+        when(orderRepositoryJpa.findById(1L)).thenReturn(Optional.of(order));
+        when(productRepositoryJpa.findByCode("test")).thenReturn(Optional.of(product));
+        when(orderItemRepositoryJpa.save(any())).thenReturn(orderItem);
+
+        // when
+
+        Optional<OrderItemDTO> orderItemDTO = underTest.save(command);
+
+        // then
+
+        assertThat(orderItemDTO.isPresent()).isTrue();
+        assertThat(orderItemDTO.get().getId()).isEqualTo(1L);
+        assertThat(orderItemDTO.get().getProduct().getName()).isEqualToIgnoringCase("test");
+
     }
 
     @Test
     void deleteById() {
+
+        // given
+
+        when(orderItemRepositoryJpa.findById(1L)).thenReturn(Optional.of(orderItem));
+
+        // when
+
+        underTest.deleteById(1L);
+
+        // then
+
+        verify(session).remove(orderItem);
+
     }
 }
