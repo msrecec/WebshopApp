@@ -234,7 +234,7 @@ class OrderItemControllerTest {
     }
 
     @Test
-    void deleteById() throws Exception {
+    void deleteByIdTest() throws Exception {
 
 
         this.mockMvc.perform(
