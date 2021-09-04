@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-@EnableConfigurationProperties(ApplicationProperties.class)
+@EnableConfigurationProperties(HnbApplicationProperties.class)
 public class HnbRepositoryConfig {
 
     @Bean
     @Primary
-    ApplicationProperties getHnbUrl() {
-        return new ApplicationProperties();
+    HnbApplicationProperties getHnbUrl() {
+        return new HnbApplicationProperties();
     }
 
 }

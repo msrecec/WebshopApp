@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ApplicationProperties {
+public class HnbApplicationProperties {
 
-    private String hnbUrl = "https://api.hnb.hr/tecajn/v1?valuta=";
+    private String url = "https://api.hnb.hr/tecajn/v1?valuta=";
 
 }

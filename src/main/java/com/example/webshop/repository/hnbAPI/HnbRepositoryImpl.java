@@ -1,38 +1,33 @@
 package com.example.webshop.repository.hnbAPI;
 
-import com.example.webshop.config.ApplicationProperties;
+import com.example.webshop.config.HnbApplicationProperties;
 import com.example.webshop.model.hnb.Currency;
 import com.example.webshop.model.hnb.Hnb;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.util.SerializationUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Component
 public class HnbRepositoryImpl implements HnbRepository {
 
     private final ObjectMapper objectMapper;
-    private final ApplicationProperties applicationProperties;
+    private final HnbApplicationProperties hnbApplicationProperties;
 
     @Autowired
-    public HnbRepositoryImpl(ObjectMapper objectMapper, ApplicationProperties applicationProperties) {
+    public HnbRepositoryImpl(ObjectMapper objectMapper, HnbApplicationProperties hnbApplicationProperties) {
         this.objectMapper = objectMapper;
-        this.applicationProperties = applicationProperties;
+        this.hnbApplicationProperties = hnbApplicationProperties;
     }
 
     @Override
     public Optional<Hnb> findByCurrency(Currency currency) {
-        String resource = applicationProperties.getHnbUrl();
+        String resource = hnbApplicationProperties.getUrl();
         RestTemplate restTemplate = new RestTemplate();
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(resource+currency.getCurrency(), String.class);
