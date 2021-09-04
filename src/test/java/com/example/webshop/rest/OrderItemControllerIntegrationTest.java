@@ -149,7 +149,6 @@ public class OrderItemControllerIntegrationTest {
     @Test
     void deleteByIdIT() throws Exception {
 
-
         this.mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/v1/orderItem/id/{id}", 1L)
         ).andExpect(status().isNoContent());
