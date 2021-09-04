@@ -9,6 +9,7 @@
 Postgres  12+
 Java 16
 Docker
+Maven 3.8.2
 ### Optional:
 pgAdmin 4+
 
