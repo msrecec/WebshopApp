@@ -6,9 +6,9 @@
 ![enter image description here](https://raw.githubusercontent.com/msrecec/WebshopApp/master/project-material/assignment_2.png)
 # Prerequisites
 ### Mandatory:
-Postgres  12+
-Java 16
-Docker
+Postgres  12+,
+Java 16,
+Docker,
 Maven 3.8.2
 ### Optional:
 pgAdmin 4+
