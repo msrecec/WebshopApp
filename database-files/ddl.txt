@@ -1,0 +1,84 @@
+CREATE TABLE public.customer
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 1000000 CACHE 1 ),
+    first_name character varying(50) COLLATE pg_catalog."default",
+    last_name character varying(50) COLLATE pg_catalog."default",
+    email character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT customer_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.customer
+    OWNER to postgres;
+
+-- Table: public.product
+
+-- DROP TABLE public.product;
+
+CREATE TABLE public.product
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 10000000 CACHE 1 ),
+    code character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    price_hrk numeric(10,2),
+    description text COLLATE pg_catalog."default",
+    is_available boolean,
+    CONSTRAINT product_pkey PRIMARY KEY (id),
+    CONSTRAINT product_code_code1_key UNIQUE (code)
+        INCLUDE(code)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.product
+    OWNER to postgres;
+
+-- Table: public.webshop_order
+
+-- DROP TABLE public.webshop_order;
+
+CREATE TABLE public.webshop_order
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 1000000 CACHE 1 ),
+    customer_id integer,
+    status character varying(10) COLLATE pg_catalog."default",
+    total_price_hrk numeric(10,2),
+    total_price_eur numeric(10,2),
+    CONSTRAINT webshop_order_pkey PRIMARY KEY (id),
+    CONSTRAINT webshop_order_customer_id_fkey FOREIGN KEY (customer_id)
+        REFERENCES public.customer (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.webshop_order
+    OWNER to postgres;
+
+-- Table: public.order_item
+
+-- DROP TABLE public.order_item;
+
+CREATE TABLE public.order_item
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 1000000 CACHE 1 ),
+    order_id integer,
+    product_id integer,
+    quantity integer,
+    CONSTRAINT order_item_pkey PRIMARY KEY (id),
+    CONSTRAINT order_item_order_id_fkey FOREIGN KEY (order_id)
+        REFERENCES public.webshop_order (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT order_item_product_id_fkey FOREIGN KEY (product_id)
+        REFERENCES public.product (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.order_item
+    OWNER to postgres;
