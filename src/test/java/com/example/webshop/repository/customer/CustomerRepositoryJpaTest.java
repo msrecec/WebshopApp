@@ -33,7 +33,7 @@ class CustomerRepositoryJpaTest {
 
         assertThat(customers.size()).isEqualTo(1);
         assertThat(customers.get(0).getFirstName()).isEqualToIgnoringCase("mislav");
-        assertThat(customers.get(0).getLastName()).isEqualToIgnoringCase("srečec");
+        assertThat(customers.get(0).getLastName()).isEqualToIgnoringCase("Srecec");
         assertThat(customers.get(0).getEmail()).isEqualToIgnoringCase("mislav.srecec@outlook.com");
 
     }

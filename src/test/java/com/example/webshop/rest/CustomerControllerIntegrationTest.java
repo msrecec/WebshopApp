@@ -67,7 +67,7 @@ class CustomerControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Mislav"))
-                .andExpect(jsonPath("$.lastName").value("Srečec"))
+                .andExpect(jsonPath("$.lastName").value("Srecec"))
                 .andExpect(jsonPath("$.email").value("mislav.srecec@outlook.com"));
 
     }

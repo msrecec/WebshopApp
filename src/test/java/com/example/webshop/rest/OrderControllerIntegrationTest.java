@@ -87,7 +87,7 @@ class OrderControllerIntegrationTest {
                 .andExpect(jsonPath("$.orderItems[0].product.description").value("This is a great product"))
                 .andExpect(jsonPath("$.orderItems[0].product.code").value("1234567890"))
                 .andExpect(jsonPath("$.customer.firstName").value("Mislav"))
-                .andExpect(jsonPath("$.customer.lastName").value("Srečec"))
+                .andExpect(jsonPath("$.customer.lastName").value("Srecec"))
                 .andExpect(jsonPath("$.customer.email").value("mislav.srecec@outlook.com"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.status").value(Status.DRAFT.getStatus()));
@@ -119,7 +119,7 @@ class OrderControllerIntegrationTest {
                 .andExpect(jsonPath("$.orderItems[0].product.description").value("This is a great product"))
                 .andExpect(jsonPath("$.orderItems[0].product.code").value("1234567890"))
                 .andExpect(jsonPath("$.customer.firstName").value("Mislav"))
-                .andExpect(jsonPath("$.customer.lastName").value("Srečec"))
+                .andExpect(jsonPath("$.customer.lastName").value("Srecec"))
                 .andExpect(jsonPath("$.customer.email").value("mislav.srecec@outlook.com"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.status").value(Status.SUBMITTED.getStatus()));
@@ -177,7 +177,7 @@ class OrderControllerIntegrationTest {
                 .andExpect(jsonPath("$.orderItems[0].product.description").value("This is a great product"))
                 .andExpect(jsonPath("$.orderItems[0].product.code").value("1234567890"))
                 .andExpect(jsonPath("$.customer.firstName").value("Mislav"))
-                .andExpect(jsonPath("$.customer.lastName").value("Srečec"))
+                .andExpect(jsonPath("$.customer.lastName").value("Srecec"))
                 .andExpect(jsonPath("$.customer.email").value("mislav.srecec@outlook.com"))
                 .andExpect(jsonPath("$.customer.id").value(1))
                 .andExpect(jsonPath("$.status").value(Status.SUBMITTED.getStatus()));
