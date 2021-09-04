@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestClientException;
 import static org.mockito.BDDMockito.given;
 
@@ -13,6 +14,7 @@ import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class HnbRepositoryImplTest {
 
     @Autowired

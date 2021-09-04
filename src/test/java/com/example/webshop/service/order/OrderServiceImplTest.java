@@ -20,6 +20,7 @@ import com.example.webshop.repository.product.ProductRepositoryJpa;
 import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -164,7 +165,7 @@ class OrderServiceImplTest {
 
         when(orderRepositoryJpa.findById(1L)).thenReturn(Optional.of(order));
         when(session.merge(any())).thenReturn(new Object());
-        when(hnbRepository.findByCurrency(Currency.EUR, "https://api.hnb.hr/tecajn/v1?valuta="))
+        when(hnbRepository.findByCurrency(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.of(Hnb.builder().srednjiZaDevize("7,484938").build()));
 
         // when

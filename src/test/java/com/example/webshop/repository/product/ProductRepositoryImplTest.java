@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(
         locations = "classpath:application-test.properties"
 )
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductRepositoryImplTest {
 
     @Autowired

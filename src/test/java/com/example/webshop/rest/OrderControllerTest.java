@@ -194,7 +194,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.orderItems[0].id").value(1))
                 .andExpect(jsonPath("$.orderItems[0].product.name").value("test"))
                 .andExpect(jsonPath("$.orderItems[0].product.description").value("test"))
-                .andExpect(jsonPath("$.orderItems[0].product.code").value("1234567891"))
+                .andExpect(jsonPath("$.orderItems[0].product.code").value("1234567890"))
                 .andExpect(jsonPath("$.customer.firstName").value("test"))
                 .andExpect(jsonPath("$.customer.lastName").value("test"))
                 .andExpect(jsonPath("$.customer.email").value("test@test.com"))
