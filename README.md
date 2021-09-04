@@ -70,3 +70,7 @@ Or build the app and go to /target folder and run:
 # Postman
 
 If you are using Postman to test the API you can import the collection from /postman folder with api calls
+
+# Swagger
+
+To use Swagger-UI run the project and go to: <b> http://localhost:8080/swagger-ui </b>
