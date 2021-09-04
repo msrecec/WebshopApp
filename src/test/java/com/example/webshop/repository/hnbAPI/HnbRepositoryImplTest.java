@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestClientException;
 import static org.mockito.BDDMockito.given;
 
@@ -14,13 +15,14 @@ import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 
 @SpringBootTest
+@TestPropertySource(
+        locations = "classpath:application-test.properties"
+)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class HnbRepositoryImplTest {
 
     @Autowired
     HnbRepository underTest;
-
-    private static final String RESOURCE_URL = "http://localhost:8081/tecajn/v1?valuta=";
     private static final Currency CURRENCY = Currency.EUR;
 
     @Test
@@ -30,7 +32,7 @@ class HnbRepositoryImplTest {
 
         // when
 
-        Optional<Hnb> hnb = underTest.findByCurrency(CURRENCY, RESOURCE_URL);
+        Optional<Hnb> hnb = underTest.findByCurrency(CURRENCY);
 
         // then
 

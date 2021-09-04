@@ -2,7 +2,6 @@ package com.example.webshop.service.orderItem;
 
 import com.example.webshop.command.orderItem.OrderItemPostCommand;
 import com.example.webshop.command.orderItem.OrderItemPutCommand;
-import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.dto.orderItem.OrderItemDTO;
 import com.example.webshop.model.customer.Customer;
 import com.example.webshop.model.order.Order;
@@ -12,7 +11,6 @@ import com.example.webshop.model.product.Product;
 import com.example.webshop.repository.order.OrderRepositoryJpa;
 import com.example.webshop.repository.orderItem.OrderItemRepositoryJpa;
 import com.example.webshop.repository.product.ProductRepositoryJpa;
-import org.aspectj.lang.annotation.Before;
 import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,8 +27,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest

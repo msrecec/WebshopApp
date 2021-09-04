@@ -35,9 +35,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderServiceImpl implements OrderService{
 
-    private static final String RESOURCE_URL = "https://api.hnb.hr/tecajn/v1?valuta=";
-
-
     private final OrderItemRepositoryJpa orderItemRepositoryJpa;
     private final ProductRepositoryJpa productRepositoryJpa;
     private final CustomerRepositoryJpa customerRepositoryJpa;
@@ -161,7 +158,7 @@ public class OrderServiceImpl implements OrderService{
              *
              */
 
-            Optional<Hnb> hnb = hnbRepository.findByCurrency(Currency.EUR, RESOURCE_URL);
+            Optional<Hnb> hnb = hnbRepository.findByCurrency(Currency.EUR);
 
             if(hnb.isPresent()) {
                 totalPriceEur = totalPriceHrk.divide(new BigDecimal(hnb.get().getSrednjiZaDevize().replace(",", ".")), 2, RoundingMode.HALF_UP);
@@ -183,7 +180,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     public Optional<Hnb> getHnbApi() {
-        return hnbRepository.findByCurrency(Currency.EUR, RESOURCE_URL);
+        return hnbRepository.findByCurrency(Currency.EUR);
     }
 
     @Transactional

@@ -8,13 +8,8 @@ import com.example.webshop.dto.customer.CustomerDTO;
 import com.example.webshop.dto.order.OrderDTO;
 import com.example.webshop.dto.orderItem.OrderItemDTO;
 import com.example.webshop.dto.product.ProductDTO;
-import com.example.webshop.model.customer.Customer;
-import com.example.webshop.model.order.Order;
 import com.example.webshop.model.order.Status;
-import com.example.webshop.model.orderItem.OrderItem;
-import com.example.webshop.model.product.Product;
 import com.example.webshop.service.order.OrderService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +31,6 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
