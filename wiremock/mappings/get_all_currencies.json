@@ -1,0 +1,13 @@
+{
+   "request": {
+      "method": "GET",
+      "url": "/tecajn/v1"
+   },
+   "response": {
+      "status": 200,
+      "bodyFileName": "../__files/get_all_currencies_response.json",
+      "headers": {
+         "Content-Type": "application/json;charset=UTF-8"
+      }
+   }
+}

@@ -1,0 +1,13 @@
+{
+   "request": {
+      "method": "GET",
+      "url": "/tecajn/v1?valuta=EUR"
+   },
+   "response": {
+      "status": 200,
+      "bodyFileName": "../__files/get_currency_response.json",
+      "headers": {
+         "Content-Type": "application/json;charset=UTF-8"
+      }
+   }
+}
