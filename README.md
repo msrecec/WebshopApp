@@ -1,3 +1,9 @@
+# Webshop assignment
+
+![enter image description here](https://raw.githubusercontent.com/msrecec/WebshopApp/master/project-material/assignment_1.png)
+
+# Models
+![enter image description here](https://raw.githubusercontent.com/msrecec/WebshopApp/master/project-material/assignment_2.png)
 # Prerequisites
 ### Mandatory:
 Postgres  12+
@@ -5,9 +11,6 @@ Java 16
 Docker
 ### Optional:
 pgAdmin 4+
-
-
-
 
 
 
