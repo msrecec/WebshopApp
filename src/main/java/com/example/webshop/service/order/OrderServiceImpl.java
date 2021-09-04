@@ -179,8 +179,8 @@ public class OrderServiceImpl implements OrderService{
         }
     }
 
-    public Optional<Hnb> getHnbApi() {
-        return hnbRepository.findByCurrency(Currency.EUR);
+    public Optional<Hnb> getHnb(Currency currency) {
+        return hnbRepository.findByCurrency(currency);
     }
 
     @Transactional
