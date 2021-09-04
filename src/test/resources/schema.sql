@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS webshop_order;
 
 CREATE TABLE webshop_order (
                                id INT AUTO_INCREMENT,
-                               customer_id INT NOT NULL,
+                               customer_id INT,
                                status VARCHAR(100) NOT NULL,
                                total_price_hrk DECIMAL(10, 2),
                                total_price_eur DECIMAL(10, 2),
