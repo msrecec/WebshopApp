@@ -53,7 +53,7 @@ and copy paste contents of ddl.txt file into pgAdmin and run the query.
 To run wiremock in order to mock API for unit and integration testing go to /wiremock subfolder and run:
 <code>java -jar wiremock-jre8-standalone-2.30.1.jar  --port 8081 --verbose</code>
 
-# Build the app
+# Building the app
 
 in root folder of project run <code>mvn package</code> to build the project
 
