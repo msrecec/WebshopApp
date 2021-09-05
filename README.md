@@ -50,12 +50,14 @@ and copy paste contents of ddl.txt file into pgAdmin and run the query.
 
 # Wiremock
 
-To run wiremock go to /wiremock subfolder and run:
+To run wiremock in order to mock API for unit and integration testing go to /wiremock subfolder and run:
 <code>java -jar wiremock-jre8-standalone-2.30.1.jar  --port 8081 --verbose</code>
 
 # Build the app
 
 in root folder of project run <code>mvn package</code> to build the project
+
+<i> Note: You must run wiremock before running the build because of tests that are ran pre build </i> 
 
 
 # Running the app
@@ -74,4 +76,4 @@ If you are using Postman to test the API you can import the collection from /pos
 
 # Swagger
 
-To use Swagger-UI run the project and go to: <b> http://localhost:8080/swagger-ui </b>
+For dynamically generated documentation we use Swagger-UI. Just run the project and go to: <b> http://localhost:8080/swagger-ui </b>
