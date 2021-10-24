@@ -1,4 +1,4 @@
-package com.example.webshop.config;
+package com.example.webshop.config.hnb;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

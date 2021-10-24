@@ -1,4 +1,4 @@
-package com.example.webshop.config;
+package com.example.webshop.config.hnb;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

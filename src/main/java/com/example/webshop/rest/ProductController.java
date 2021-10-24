@@ -3,12 +3,15 @@ package com.example.webshop.rest;
 import com.example.webshop.dto.product.ProductDTO;
 import com.example.webshop.command.product.ProductCommand;
 import com.example.webshop.service.product.ProductService;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/v1/product")
@@ -16,17 +19,23 @@ public class ProductController {
 
     private ProductService productService;
 
+    @Autowired
     public ProductController(ProductService productService) {
+
         this.productService = productService;
+
     }
 
     @GetMapping
     public List<ProductDTO> getAllProducts() {
+
         return productService.findAll();
+
     }
 
     @GetMapping("/code/{code}")
     public ResponseEntity<ProductDTO> getProductByCode(@PathVariable final String code) {
+
         return productService.findByCode(code)
                 .map(ResponseEntity::ok)
                 .orElseGet(
@@ -68,6 +77,4 @@ public class ProductController {
     public void delete(@PathVariable String code) {
         productService.deleteByCode(code);
     }
-
-
 }

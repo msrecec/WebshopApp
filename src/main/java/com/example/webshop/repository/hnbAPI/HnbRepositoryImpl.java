@@ -1,6 +1,6 @@
 package com.example.webshop.repository.hnbAPI;
 
-import com.example.webshop.config.HnbApplicationProperties;
+import com.example.webshop.config.hnb.HnbApplicationProperties;
 import com.example.webshop.model.hnb.Currency;
 import com.example.webshop.model.hnb.Hnb;
 import com.fasterxml.jackson.core.JsonProcessingException;
